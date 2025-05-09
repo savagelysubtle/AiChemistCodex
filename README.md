@@ -40,6 +40,12 @@ To work with an individual project, navigate to its subdirectory (e.g., `cd AiCh
 
 This setup allows for both separation of concerns and co-location, ensuring that each project can evolve independently while being part of a larger, cohesive suite.
 
+## Delve Deeper: The AiChemist's Lore
+
+To understand the philosophy, the naming conventions, and the overarching narrative behind the AiChemist suite, explore the chronicle within:
+
+*   **[📜 The AiChemist's Codex: A Chronicle of Digital Alchemy](./docs/THE_AICHEMISTS_CODEX.md)**
+
 ## Next Steps for Documentation ("Sick Ass Docs")
 
 This README provides the initial overview. To build out "sick ass docs," we can consider:
