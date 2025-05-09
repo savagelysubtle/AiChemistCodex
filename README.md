@@ -46,15 +46,9 @@ To understand the philosophy, the naming conventions, and the overarching narrat
 
 *   **[📜 The AiChemist's Codex: A Chronicle of Digital Alchemy](./docs/THE_AICHEMISTS_CODEX.md)**
 
-## Next Steps for Documentation ("Sick Ass Docs")
+## 📖 Suite Documentation
 
-This README provides the initial overview. To build out "sick ass docs," we can consider:
--   **Overall Architecture Diagram**: A visual representation of how the AiChemist components (could) interact.
--   **Core Concepts**: Explaining key philosophies or technologies shared across the projects.
--   **Inter-Project Communication**: If applicable, how the projects might communicate or share data.
--   **Contribution Guidelines**: How to contribute to the Codex or individual projects.
--   **Development Environment Setup**: For the entire Codex, if there are shared tools or practices.
--   **Roadmap for the Codex**: High-level goals for the suite.
--   **Showcase/Demo**: Instructions or links to demos showcasing the combined power of the tools.
+For a deeper dive into the technical aspects and project-specific details, explore the following resources:
 
-Let me know what aspects you'd like to prioritize for the documentation!
+*   **[🏛️ System Architecture Overview](./docs/SYSTEM_ARCHITECTURE.md)**: Understand the high-level architecture of the AiChemist Codex and how individual projects are designed.
+*   **[📚 Project Documentation Hub](./docs/PROJECT_DOCUMENTATION_HUB.md)**: Access detailed READMEs, architecture documents, roadmaps, and feature guides for each individual project (`Archivum`, `Compendium`, `Transmutations`).
