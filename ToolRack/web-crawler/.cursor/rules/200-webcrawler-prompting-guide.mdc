@@ -1,0 +1,67 @@
+---
+description: WHEN working WITH ALL WEBCRAWLERS
+globs:
+alwaysApply: false
+---
+<cursor-rule>
+  <title>General Prompting Guide for WebCrawler Project</title>
+  <version>1.0.0</version>
+
+  <context>
+    <usage>Use this guide when requesting AI assistance for web scraping tasks within the WebCrawler project, regardless of the specific library being used.</usage>
+    <objective>To ensure clear, actionable requests that allow the AI to provide accurate and relevant code or guidance efficiently.</objective>
+    <reference>Consult the main research document for library details: [Web Scraping Libraries Research](mdc:WebCrawler/scraping_libraries_research.md)</reference>
+  </context>
+
+  <requirements>
+    <requirement>
+      <name>Specify Target Library</name>
+      <description>Clearly state which scraping library you intend to use (Scrapy, Playwright, or Puppeteer). Use tags like `@Scrapy`, `@Playwright`, or `@Puppeteer` if possible.</description>
+    </requirement>
+    <requirement>
+      <name>Provide Target URLs</name>
+      <description>Include the specific URL(s) you want to scrape. If multiple URLs or a pattern is involved, explain the logic for finding them (e.g., pagination links, sitemap).</description>
+    </requirement>
+    <requirement>
+      <name>Define Desired Data</name>
+      <description>Specify the exact data fields you want to extract. Providing an example JSON structure or listing the fields is highly recommended.</description>
+      <example>
+        <good>"Extract the product name, price, and rating. The output should be a JSON object like: `{"name": "...", "price": "...", "rating": "..."}`"</good>
+        <bad>"Get the product info."</bad>
+      </example>
+    </requirement>
+    <requirement>
+      <name>Give Context (HTML Snippets)</name>
+      <description>If asking for help with selectors (CSS/XPath), provide a relevant snippet of the HTML source code containing the target data. This greatly improves selector accuracy.</description>
+    </requirement>
+    <requirement>
+      <name>Mention Dynamic Content</name>
+      <description>If the target website relies heavily on JavaScript to load content, explicitly mention this, especially when using Scrapy (which might need integration) or when specific waits are needed in Playwright/Puppeteer.</description>
+    </requirement>
+    <requirement>
+      <name>Specify Configuration Needs</name>
+      <description>If you need help setting up configuration (e.g., user agents, delays, proxies, JSON loading), clearly state the requirements.</description>
+    </requirement>
+     <requirement>
+      <name>Error Handling</name>
+      <description>If you need specific error handling (e.g., what to do if an element is missing, how to handle network errors), please specify the desired behavior.</description>
+    </requirement>
+  </requirements>
+
+  <examples>
+    <good-practice>
+      <description>A well-formed request for scraping.</description>
+      <example>
+"Using `@Playwright`, please write a script for `https://quotes.toscrape.com/js/` that extracts all quotes and authors. The page loads content dynamically. Wait for the `.quote` selector. Output the data as a JSON array like `[{"text": "...", "author": "..."}, ...]`. Save the output to `quotes.json`."
+      </example>
+    </good-practice>
+    <bad-practice>
+      <description>A vague request lacking necessary details.</description>
+      <example>
+"Scrape quotes to scrape."
+      </example>
+    </bad-practice>
+  </examples>
+
+</cursor-rule>
+

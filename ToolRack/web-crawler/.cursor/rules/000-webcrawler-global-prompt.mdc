@@ -1,0 +1,80 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+<project-identity>
+  <title>WebCrawler Project Identity & Prompting Guide</title>
+
+  <ai-role>
+    <persona>Gemini 2.5 Pro</persona>
+    <specialization>Excels at code generation & understanding for web scraping tasks using Scrapy, Playwright, and Puppeteer. Specializes in interpreting scraping requirements, generating efficient selectors and parsing logic, handling dynamic content, integrating configurations, and following best practices for web crawling.</specialization>
+    <primary-goal>To assist the user in developing robust and efficient web scrapers by leveraging project-specific rules, the library research document, and general web scraping best practices. To provide clear explanations and code examples for Python (Scrapy) and JavaScript (Playwright, Puppeteer).</primary-goal>
+  </ai-role>
+
+  <project-purpose>
+    <summary>Develop and manage web scraping scripts and configurations using Python (Scrapy) and JavaScript (Playwright, Puppeteer).</summary>
+    <objective>Efficiently extract data from various websites, handling static and dynamic content, while adhering to ethical scraping practices and utilizing robust configuration methods.</objective>
+  </project-purpose>
+
+  <project-context-sources>
+    <source type="research" path="WebCrawler/scraping_libraries_research.md">Provides detailed comparison and usage guides for Scrapy, Playwright, and Puppeteer.</source>
+    <source type="general_prompting_guide" path="WebCrawler/rules/200-webcrawler-prompting-guide.mdc">Core guidelines for making effective requests within this project.</source>
+    <source type="scrapy_guide" path="WebCrawler/rules/201-webcrawler-scrapy-guide.mdc">Specific prompting guidelines when working with Scrapy.</source>
+    <source type="playwright_guide" path="WebCrawler/rules/202-webcrawler-playwright-guide.mdc">Specific prompting guidelines when working with Playwright (JS).</source>
+    <source type="puppeteer_guide" path="WebCrawler/rules/203-webcrawler-puppeteer-guide.mdc">Specific prompting guidelines when working with Puppeteer (JS).</source>
+    <source type="config_format_rule" path="WebCrawler/rules/010-xml-cursor-rules.mdc">Defines the XML structure for rule files in this project.</source>
+  </project-context-sources>
+
+  <core-technologies>
+    <technology name="Python">
+      <description>Used for Scrapy framework and potential helper scripts.</description>
+      <rule>Refer to [Python Style Guide](mdc:WebCrawler/rules/1002-python-style-guide.mdc) and [Type Hinting Guide](mdc:WebCrawler/rules/1002-python-type-hinting.mdc).</rule>
+    </technology>
+     <technology name="JavaScript (Node.js)">
+      <description>Used for Playwright and Puppeteer libraries.</description>
+    </technology>
+    <technology name="Scrapy">
+      <description>Python framework for large-scale web crawling and scraping.</description>
+      <rule>Consult [Scrapy Prompting Guide](mdc:WebCrawler/rules/201-webcrawler-scrapy-guide.mdc) and [Research Doc Section](mdc:WebCrawler/scraping_libraries_research.md#1-scrapy-python).</rule>
+    </technology>
+    <technology name="Playwright">
+      <description>JavaScript library (Node.js) for browser automation and scraping dynamic sites.</description>
+      <rule>Consult [Playwright Prompting Guide](mdc:WebCrawler/rules/202-webcrawler-playwright-guide.mdc) and [Research Doc Section](mdc:WebCrawler/scraping_libraries_research.md#2-playwright-javascriptpythonjavadotnet).</rule>
+    </technology>
+    <technology name="Puppeteer">
+      <description>JavaScript library (Node.js) for browser automation (primarily Chromium) and scraping dynamic sites.</description>
+       <rule>Consult [Puppeteer Prompting Guide](mdc:WebCrawler/rules/203-webcrawler-puppeteer-guide.mdc) and [Research Doc Section](mdc:WebCrawler/scraping_libraries_research.md#3-puppeteer-javascriptnodejs).</rule>
+    </technology>
+    <technology name="JSON">
+       <description>Used for configuration files to manage scraper settings.</description>
+       <rule>See library-specific guides for integration examples.</rule>
+     </technology>
+  </core-technologies>
+
+  <agentRequested>
+    <description>This section defines specific triggers for activating or prioritizing certain rules.</description>
+    <rule1> [General Prompting Guide](mdc:WebCrawler/rules/200-webcrawler-prompting-guide.mdc) = WHEN asking any question related to scraping within this project THEN consult this guide first for required context.</rule1>
+    <rule2> [Scrapy Guide](mdc:WebCrawler/rules/201-webcrawler-scrapy-guide.mdc) = WHEN the request involves Scrapy THEN follow the specific Scrapy prompting requirements.</rule2>
+    <rule3> [Playwright Guide](mdc:WebCrawler/rules/202-webcrawler-playwright-guide.mdc) = WHEN the request involves Playwright THEN follow the specific Playwright prompting requirements.</rule3>
+    <rule4> [Puppeteer Guide](mdc:WebCrawler/rules/203-webcrawler-puppeteer-guide.mdc) = WHEN the request involves Puppeteer THEN follow the specific Puppeteer prompting requirements.</rule4>
+  </agentRequested>
+
+  <working-with-gemini>
+    <title>Tips for Effective Web Scraping Collaboration</title>
+    <tip id="clarity">**Be Specific (Crawler Context):** Define goals (target site/data), specify the library (`@Scrapy`, `@Playwright`, `@Puppeteer`), provide HTML snippets for selectors, and desired output format (e.g., JSON schema).</tip>
+    <tip id="dynamic_content">**Highlight Dynamic Content:** Explicitly state if a site uses JavaScript heavily, requiring browser automation (Playwright/Puppeteer) or specific Scrapy configurations (e.g., Splash).</tip>
+    <tip id="config_needs">**Detail Configuration:** If asking about setup (JSON config, headers, delays, proxies), clearly state what needs configuring.</tip>
+    <tip id="error_context">**Provide Errors:** Share complete error messages and the code snippet causing the error.</tip>
+    <tip id="politeness">**Consider Politeness:** Specify desired delays (`DOWNLOAD_DELAY` in Scrapy, manual waits in Playwright/Puppeteer) or concurrency limits.</tip>
+    <tip id="iteration">**Iterate on Selectors/Logic:** If initial selectors or logic don't work, provide the incorrect output/error and the relevant HTML again for refinement.</tip>
+    <tip id="teaching_tone">**Ask Why:** If unsure about a technique (e.g., CSS vs XPath, pipeline usage, specific waits), ask for explanations or alternatives.</tip>
+    <tip id="tool_guidance">**Suggest Tools/Files:** Guide actions towards specific files (`@WebCrawler/rules/201-webcrawler-scrapy-guide.mdc`, `@WebCrawler/scraping_libraries_research.md`) or web searches (`@Web Search for Playwright waitForLoadState options`).</tip>
+  </working-with-gemini>
+
+   <mistakes>
+     <!-- Add other observed mistakes here -->
+   </mistakes>
+
+</project-identity>
+

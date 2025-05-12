@@ -1,0 +1,76 @@
+---
+description: WHEN working WITH SCRAPY
+globs:
+alwaysApply: false
+---
+<cursor-rule>
+  <title>Scrapy Prompting Guide for WebCrawler Project</title>
+  <version>1.0.0</version>
+
+  <context>
+    <usage>Use this guide when requesting AI assistance specifically for Scrapy tasks within the WebCrawler project.</usage>
+    <objective>To get targeted help for creating/modifying Scrapy spiders, items, pipelines, and configurations.</objective>
+    <reference>Consult the Scrapy section in the research doc: [Scrapy Research](mdc:WebCrawler/scraping_libraries_research.md#1-scrapy-python)</reference>
+  </context>
+
+  <requirements>
+    <requirement>
+      <name>Spider Generation/Modification</name>
+      <description>Ask for a new spider by specifying its `name`, `allowed_domains`, `start_urls`, and the logic for the `parse` method. For modifications, point to the existing spider file.</description>
+      <example>
+        <good>"Create a Scrapy spider named `quotespider` for `quotes.toscrape.com` starting at `http://quotes.toscrape.com/page/1/`. In the `parse` method, extract text from `.text` and author from `.author` into a dictionary."</good>
+      </example>
+    </requirement>
+    <requirement>
+      <name>Item Definition</name>
+      <description>If using Scrapy Items, ask for an `items.py` definition by listing the fields (e.g., `scrapy.Field()`). Specify the item class name.</description>
+      <example>
+        <good>"Define a Scrapy Item named `QuoteItem` in `items.py` with fields `text` and `author`."</good>
+      </example>
+    </requirement>
+    <requirement>
+      <name>Selector Assistance</name>
+      <description>Provide HTML snippets and ask for CSS Selectors (`response.css(...)`) or XPath expressions (`response.xpath(...)`) to extract specific data. Mention if you need `.get()` (first match) or `.getall()` (all matches).</description>
+      <example>
+        <good>"Given this HTML `<span class="text">Quote text</span>`, what is the Scrapy CSS selector to get the text `Quote text`?"</good>
+      </example>
+    </requirement>
+    <requirement>
+      <name>Pipeline Implementation</name>
+      <description>Request help creating or modifying item pipelines in `pipelines.py`. Specify the desired action (e.g., data cleaning, validation, saving to database/file) and the logic for the `process_item` method.</description>
+      <example>
+        <good>"Create a Scrapy pipeline that saves items to a JSON file named `output.jsonl`."</good>
+      </example>
+    </requirement>
+    <requirement>
+      <name>Settings Configuration</name>
+      <description>Ask for specific settings changes in `settings.py` (e.g., `USER_AGENT`, `DOWNLOAD_DELAY`, `ITEM_PIPELINES`, `ROBOTSTXT_OBEY`).</description>
+    </requirement>
+    <requirement>
+      <name>JSON Configuration Integration</name>
+      <description>If you need help loading settings from a JSON file (e.g., using `custom_settings` in a spider or a custom run script), explain which settings need to be loaded and from which file.</description>
+      <reference>See [JSON Integration Methods](mdc:WebCrawler/scraping_libraries_research.md#13-json-based-configuration-integration)</reference>
+    </requirement>
+    <requirement>
+      <name>Handling Pagination/Links</name>
+      <description>Explain how pagination works (e.g., 'Next' button selector) and ask for logic using `response.follow()` to crawl subsequent pages.</description>
+    </requirement>
+  </requirements>
+
+  <examples>
+    <good-practice>
+      <description>A specific request for a Scrapy spider component.</description>
+      <example>
+"In the `quotespider` spider (`myproject/spiders/quotespider.py`), add logic to find the 'Next' button using the CSS selector `li.next a` and use `response.follow` to crawl the next page, calling the same `parse` method."
+      </example>
+    </good-practice>
+    <bad-practice>
+      <description>A vague request lacking Scrapy context.</description>
+      <example>
+"Make my scraper follow links."
+      </example>
+    </bad-practice>
+  </examples>
+
+</cursor-rule>
+

@@ -8,3 +8,66 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Compiled output
+lib/
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+Logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Test files and directories
+test-folder/
+
+# Backups and archives
+*.tgz
+cursor-mcp-installer-*.tgz
+cursor-ai-mcp-installer-*.tgz
+
+# Smithery files for this fork
+smithery.yaml
+SMITHERY.md
+
+# Publishing instructions
+PUBLISHING.md
+
+# Development only files
+Dockerfile
+CONTRIBUTING.md
+# tsconfig.json is commented out as it's needed for building the project
+# tsconfig.json
+
+# Marketing materials
+marketing/
