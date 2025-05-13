@@ -1,0 +1,21 @@
+# Dependencies and Virtual Environments
+node_modules/
+.venv/
+
+# Build output / Compiled files
+dist/
+build/
+lib/
+*.pyc
+*.pyo
+*.egg-info
+*.tsbuildinfo
+
+# IDE / OS / Metadata Files
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Git directory
+.git/

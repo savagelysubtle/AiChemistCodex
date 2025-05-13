@@ -1,0 +1,1589 @@
+Directory structure:
+└── matthewdcage-cursor-mcp-installer/
+    ├── README.md
+    ├── CHANGELOG.md
+    ├── INSTALL.md
+    ├── LICENSE
+    ├── package.json
+    ├── tsconfig.json
+    ├── .npmignore
+    ├── .prettierrc
+    ├── assets/
+    │   ├── README.md
+    │   ├── banner-template.html
+    │   └── cursor-mcp-banner.txt
+    ├── docs/
+    └── src/
+        └── index.mts
+
+================================================
+FILE: README.md
+================================================
+# Cursor MCP Installer
+
+<div align="center">
+
+<pre style="text-align: center;">
+   ___         __  __    ___  __            ___   ___ 
+  / __\/\ /\  /__\/ _\  /___\/__\  /\/\    / __\ / _ \
+ / /  / / \ \/ \//\ \  //  // \// /    \  / /   / /_)/
+/ /___\ \_/ / _  \_\ \/ \_// _  \/ /\/\ \/ /___/ ___/ 
+\____/ \___/\/ \_/\__/\___/\/ \_/\/    \/\____/\/     
+                                                      
+  _____    __  __  _____  _      __    __    __  __   
+  \_   \/\ \ \/ _\/__   \/_\    / /   / /   /__\/__\  
+   / /\/  \/ /\ \   / /\//_\\  / /   / /   /_\ / \//  
+/\/ /_/ /\  / _\ \ / / /  _  \/ /___/ /___//__/ _  \  
+\____/\_\ \/  \__/ \/  \_/ \_/\____/\____/\__/\/ \_/  
+
++---------------------------------------------+
+| 🚀 CURSOR MCP INSTALLER 🚀                 |
+| ✨ Magically install MCP servers with ease ✨ |
++---------------------------------------------+
+</pre>
+
+  <p>A Model Context Protocol (MCP) server for installing and configuring other MCP servers within Cursor IDE.</p>
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![npm version](https://img.shields.io/npm/v/cursor-mcp-installer-free.svg)](https://www.npmjs.com/package/cursor-mcp-installer-free)
+  [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-brightgreen.svg)](https://github.com/anthropic-labs/model-context-protocol)
+  [![Cursor IDE](https://img.shields.io/badge/Cursor-IDE-blue.svg)](https://cursor.sh)
+  [![npm downloads](https://img.shields.io/npm/dt/cursor-mcp-installer-free.svg)](https://www.npmjs.com/package/cursor-mcp-installer-free)
+  
+  <a href="https://www.linkedin.com/in/digitalmarketingstrategyexpert/">
+    <img src="https://img.shields.io/badge/LinkedIn-Matthew_Cage-blue?style=flat&logo=linkedin" alt="LinkedIn"/>
+  </a>
+</div>
+
+> **📢 NOW AVAILABLE ON NPM!** Install with a simple `npm install -g cursor-mcp-installer-free` command or use directly with `npx cursor-mcp-installer-free` or `uvx cursor-mcp-installer-free`!
+
+> **🔄 Latest Updates (v0.1.3):** Improved path handling for all MCP server installations, better OpenAPI schema detection, and more robust server discovery in local directories. Thanks to [@ItzAmirreza](https://github.com/ItzAmirreza) for submitting the initial installation path handling issue. See [CHANGELOG.md](CHANGELOG.md) for details.
+
+## Quick Start Guide
+
+### Step 1: Add to Cursor Configuration
+
+Choose one of these methods to add the MCP Installer to your Cursor configuration:
+
+#### Using npx (Easiest - No Installation Required)
+
+Add this to your `~/.cursor/mcp.json` file (create it if it doesn't exist):
+
+```json
+{
+  "mcpServers": {
+    "MCP Installer": {
+      "command": "npx",
+      "type": "stdio",
+      "args": [
+        "cursor-mcp-installer-free@0.1.3",
+        "index.mjs"
+      ]
+    }
+  }
+}
+```
+
+#### Using npm (Global Installation)
+
+```bash
+npm install -g cursor-mcp-installer-free@0.1.3
+```
+
+Then add to your `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "MCP Installer": {
+      "command": "cursor-mcp-installer-free",
+      "type": "stdio",
+      "args": [
+        "index.mjs"
+      ]
+    }
+  }
+}
+```
+
+### Step 2: Restart Cursor
+
+Close and reopen Cursor to apply the configuration changes.
+
+### Step 3: Use Claude to Install Servers
+
+Ask Claude to install any MCP server for you:
+
+```
+Install the web search MCP server
+```
+
+or
+
+```
+Install the MCP server for OpenAPI schema exploration with my-schema.yaml
+```
+
+### Step 4: What You'll See When Installed
+
+Once properly installed and Cursor is restarted, you'll see the MCP Installer available in the sidebar when using Claude:
+
+<img src="docs/installtion-success-cursor-screenshot.png" alt="MCP Installer Interface" width="500"/>
+
+The MCP Installer provides three main tools:
+- `install_repo_mcp_server`: Install MCP servers from npm packages or repositories
+- `install_local_mcp_server`: Install MCP servers from local directories
+- `add_to_cursor_config`: Add custom MCP server configurations
+
+## Features
+
+- Install MCP servers from npm packages
+- Install MCP servers from local directories
+- Configure MCP servers for Cursor
+- Add custom MCP server configurations
+
+## Prerequisites
+
+Before using this tool, you need to have installed:
+
+- [Node.js](https://nodejs.org/) (for npm packages)
+- [Cursor IDE](https://cursor.sh/)
+
+## Installation
+
+There are several ways to install and use the Cursor MCP Installer:
+
+### 1. Using npm (Recommended)
+
+```bash
+npm install -g cursor-mcp-installer-free@0.1.3
+```
+
+After installation, add it to your Cursor MCP configuration file:
+
+```json
+{
+  "mcpServers": {
+    "MCP Installer": {
+      "command": "cursor-mcp-installer-free",
+      "type": "stdio",
+      "args": [
+        "index.mjs"
+      ]
+    }
+  }
+}
+```
+
+### 2. Using npx (No Installation Required)
+
+You can use npx to run the package without installing it globally:
+
+```json
+{
+  "mcpServers": {
+    "MCP Installer": {
+      "command": "npx",
+      "type": "stdio",
+      "args": [
+        "cursor-mcp-installer-free@0.1.3",
+        "index.mjs"
+      ]
+    }
+  }
+}
+```
+
+### 3. Direct from GitHub
+
+Clone the repository and build it locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/matthewdcage/cursor-mcp-installer.git
+cd cursor-mcp-installer
+
+# Install dependencies and build
+npm install
+npm run build
+```
+
+Then configure Cursor to use your local installation:
+
+```json
+{
+  "mcpServers": {
+    "MCP Installer": {
+      "command": "node",
+      "type": "stdio",
+      "args": [
+        "/path/to/cursor-mcp-installer/lib/index.mjs"
+      ]
+    }
+  }
+}
+```
+
+Replace `/path/to/cursor-mcp-installer` with the actual path where you've cloned the repository.
+
+### Where is the Cursor MCP Configuration File?
+
+The Cursor MCP configuration file is located at:
+
+- **macOS/Linux**: `~/.cursor/mcp.json`
+- **Windows**: `%USERPROFILE%\.cursor\mcp.json`
+
+If the file doesn't exist, you can create it with the content from any of the installation methods above.
+
+## Path Handling Improvements in v0.1.3
+
+Version 0.1.3 introduces significant improvements to path handling for MCP server installations:
+
+### Enhanced Path Resolution
+- Properly normalizes both relative and absolute paths
+- Handles paths with spaces and special characters
+- Ensures consistent path formatting across different operating systems
+
+### Better Schema Detection
+- Now scans all arguments for schema files, not just the first one
+- Supports more schema file extensions (.yaml, .yml, .json, .openapi)
+- Properly normalizes schema file paths before passing to servers
+
+### Improved Server Discovery
+- Added detection of common server entry points in local directories
+- Enhanced support for Python-based MCP servers
+- Better error reporting for path-related issues
+
+These improvements make the MCP Installer more robust for all types of server installations, especially when dealing with custom file paths, OpenAPI schemas, and local directory installations.
+
+## Usage
+
+Once installed, you can use Claude or Cursor to interact with the MCP Installer. Here are some example prompts:
+
+### Install an npm package as an MCP server
+
+```
+Install the MCP server named mcp-server-fetch
+```
+
+### Install with arguments
+
+```
+Install the @modelcontextprotocol/server-filesystem package as an MCP server. Use ['/home/user/documents'] for the arguments
+```
+
+### Install a local MCP server
+
+```
+Install the MCP server at /home/user/projects/my-mcp-server
+```
+
+### Install with environment variables
+
+```
+
+
+================================================
+FILE: CHANGELOG.md
+================================================
+# Changelog
+
+All notable changes to the Cursor MCP Installer will be documented in this file.
+
+## [0.1.3] - 2024-06-10
+
+### Summary
+This release significantly improves path handling in the MCP Installer, making it more robust when dealing with various file paths, schema files, and server detection. Users will experience fewer issues with file paths containing spaces or special characters, better detection of OpenAPI schema files, and more reliable server discovery in local directories.
+
+### Added
+- New path handling utilities to improve file path resolution:
+  - `normalizeServerPath` - Normalizes and validates file paths
+  - `findSchemaFile` - Intelligently finds schema files in arguments
+  - `findServerEntryPoint` - Detects common server entry points in directories
+
+### Improved
+- Enhanced path handling for all MCP server installations
+- Better schema file detection for OpenAPI schema servers (now checks all arguments)
+- Improved directory scanning for server entry points
+- Automatic normalization of file paths in server arguments
+- More robust error handling during path resolution
+- Added support for detecting Python server files in local installations
+
+### Fixed
+- Fixed issues with relative vs. absolute paths in server configurations
+- Resolved problems with path handling for files with spaces
+- Improved error reporting for invalid file paths
+
+### Thanks
+- Special thanks to [@ItzAmirreza](https://github.com/ItzAmirreza) for submitting the issue regarding path handling problems for initial installation
+
+## [0.1.2] - 2024-05-21
+
+### Added
+- Fixed installation instructions to include required `index.mjs` argument in command args
+- Enhanced error handling for installation failures
+- Support for more MCP server types including Python-based servers
+
+### Changed
+- Updated repository URLs
+- Cleaned up repository structure
+- Improved documentation and examples
+
+### Fixed
+- Resolved issues with npm package naming
+- Fixed configuration file path generation
+- Improved error messages for failed installations
+
+Initial public release.
+
+- Base functionality for installing MCP servers
+- Support for npm and uvx installations
+- Basic support for OpenAPI schema servers
+- Support for installing from local directories 
+
+
+================================================
+FILE: INSTALL.md
+================================================
+# Quick Installation Guide
+
+This guide provides the simplest ways to install and use the MCP Installer.
+
+## Option 1: Using npx (No Installation Required)
+
+1. Edit your Cursor configuration file:
+   - **macOS/Linux**: `~/.cursor/mcp.json`
+   - **Windows**: `%USERPROFILE%\.cursor\mcp.json`
+
+2. Add the following configuration (create the file if it doesn't exist):
+
+```json
+{
+  "mcpServers": {
+    "MCP Installer": {
+      "command": "npx",
+      "type": "stdio",
+      "args": [
+        "cursor-mcp-installer-free",
+        "index.mjs"
+      ]
+    }
+  }
+}
+```
+
+3. Restart Cursor
+4. Ask Claude to "Install the web search MCP server"
+
+## Option 2: Global Installation with npm
+
+1. Install the package globally:
+
+```bash
+npm install -g cursor-mcp-installer-free
+```
+
+2. Edit your Cursor configuration file:
+
+```json
+{
+  "mcpServers": {
+    "MCP Installer": {
+      "command": "cursor-mcp-installer-free",
+      "type": "stdio",
+      "args": [
+        "index.mjs"
+      ]
+    }
+  }
+}
+```
+
+3. Restart Cursor
+4. Ask Claude to "Install the web search MCP server"
+
+## Troubleshooting
+
+- If you get an error about the command not being found, make sure you have Node.js installed and that it's in your PATH.
+- If Cursor doesn't recognize the MCP server, check that your configuration file is correctly formatted and in the right location.
+- Try restarting your computer if changes don't take effect after restarting Cursor. 
+
+
+================================================
+FILE: LICENSE
+================================================
+MIT License
+
+Copyright (c) 2024 Matthew Cage
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. 
+
+
+================================================
+FILE: package.json
+================================================
+{
+  "name": "cursor-mcp-installer-free",
+  "version": "0.1.3",
+  "bin": {
+    "cursor-mcp-installer-free": "lib/index.mjs"
+  },
+  "description": "A MCP server to install other MCP servers in Cursor",
+  "main": "lib/index.mjs",
+  "type": "module",
+  "scripts": {
+    "prepare": "tsc && shx chmod +x ./lib/index.mjs",
+    "build": "tsc",
+    "test": "echo \"No tests specified\"",
+    "prepublishOnly": "npm run build",
+    "publish-public": "npm publish --access public"
+  },
+  "author": "Matthew Cage",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.1",
+    "rimraf": "^6.0.1",
+    "spawn-rx": "^4.0.0"
+  },
+  "devDependencies": {
+    "shx": "^0.3.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "keywords": [
+    "cursor",
+    "mcp",
+    "installer",
+    "ModelContextProtocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthewdcage/cursor-mcp-installer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/matthewdcage/cursor-mcp-installer/issues"
+  },
+  "homepage": "https://github.com/matthewdcage/cursor-mcp-installer#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}
+
+
+
+================================================
+FILE: tsconfig.json
+================================================
+{
+  "compilerOptions": {
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "pretty": true,
+    "target": "ES2022",
+    "outDir": "lib",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "lib": ["dom", "es2022"]
+  },
+  "formatCodeOptions": {
+    "indentSize": 2,
+    "tabSize": 2
+  },
+  "include": ["src/**/*.mts"],
+  "exclude": ["node_modules", "lib", "**/*.spec.ts"]
+} 
+
+
+================================================
+FILE: .npmignore
+================================================
+# Source files
+src/
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+.DS_Store
+*.log
+*.swp
+*.swo
+
+# Config files not needed in the package
+.prettierrc
+.eslintrc
+tsconfig.json
+eslint.config.mjs
+
+# Assets used for documentation
+assets/
+public-git-plan.md
+
+# Tests
+tests/
+__tests__/
+*.test.ts
+*.spec.ts
+
+# Documentation files (redundant in package)
+CONTRIBUTING.md 
+
+
+================================================
+FILE: .prettierrc
+================================================
+{
+  "endOfLine": "auto",
+  "singleQuote": false,
+  "printWidth": 100,
+  "tabWidth": 2
+} 
+
+
+================================================
+FILE: assets/README.md
+================================================
+# Banner Image Generation
+
+This directory contains resources for the Cursor MCP Installer banner.
+
+## Instructions for Generating a Proper Banner
+
+1. Open the `banner-template.html` file in a web browser
+2. Take a screenshot of the banner (the dark blue/purple gradient box with the Cursor MCP Installer title)
+3. Save the screenshot as `cursor-mcp-banner.png` in this directory
+4. Push the image to the repository
+
+## Using a Different Banner
+
+If you prefer to use a different banner image:
+
+1. Create your banner image with dimensions around 1200x400px
+2. Save it as `cursor-mcp-banner.png` in this directory
+3. Update the README.md in the root directory to use your image: 
+
+
+================================================
+FILE: assets/banner-template.html
+================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor MCP Installer Banner</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .banner {
+            width: 1200px;
+            height: 400px;
+            background: linear-gradient(135deg, #1e1e2e 0%, #333356 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            color: white;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(106, 90, 205, 0.3), rgba(0, 206, 209, 0.3));
+            z-index: 1;
+        }
+        .content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1000px;
+            z-index: 2;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-right: 50px;
+        }
+        .cursor-logo {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .cursor-shape {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background-color: #1e1e2e;
+            position: relative;
+        }
+        .cursor-shape::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            background-color: #00ce9b;
+            border-radius: 2px;
+        }
+        .info {
+            flex: 1;
+        }
+        h1 {
+            font-size: 50px;
+            margin: 0;
+            margin-bottom: 5px;
+            font-weight: 600;
+            background: linear-gradient(to right, #ffffff, #00ce9b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        h2 {
+            font-size: 24px;
+            margin: 0;
+            margin-bottom: 15px;
+            color: #f0f0f0;
+            font-weight: 400;
+        }
+        .badges {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .badge {
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .mcp-badge {
+            background-color: #00ce9b;
+            color: #000;
+        }
+        .cursor-badge {
+            background-color: #6a5acd;
+            color: white;
+        }
+        .circle-1, .circle-2 {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(106, 90, 205, 0.2) 0%, rgba(106, 90, 205, 0) 70%);
+            top: -100px;
+            right: -50px;
+        }
+        .circle-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 206, 209, 0.15) 0%, rgba(0, 206, 209, 0) 70%);
+            bottom: -150px;
+            left: -100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="circle-1"></div>
+        <div class="circle-2"></div>
+        <div class="content">
+            <div class="logo-container">
+                <div class="cursor-logo">
+                    <div class="cursor-shape"></div>
+                </div>
+            </div>
+            <div class="info">
+                <h1>Cursor MCP Installer</h1>
+                <h2>Seamlessly install and configure MCP servers for your Cursor IDE</h2>
+                <div class="badges">
+                    <div class="badge mcp-badge">MCP Protocol</div>
+                    <div class="badge cursor-badge">Cursor IDE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
+
+
+================================================
+FILE: assets/cursor-mcp-banner.txt
+================================================
+  ______                           __  __ _____ _____    _____           _        _ _           
+ / _____)                         |  \/  |  __ \_   _|  |_   _|         | |      | | |          
+| /       _   _  ____ ___ _   _  | \  / | |__) || |      | |  _ __  ___| |_ __ _| | | ___ _ __ 
+| |      | | | |/ ___) _ \ | | | | |\/| |  ___/ | |      | | | '_ \/ __| __/ _` | | |/ _ \ '__|
+| \_____ | |_| | |  | |_| | |_| | | |  | | |    _| |_    _| |_| | | \__ \ || (_| | | |  __/ |   
+ \______)|____/|_|   \___/\__  | |_|  |_|_|   |_____|  |_____|_| |_|___/\__\__,_|_|_|\___|_|   
+                         (____/                                                                 
+
+ +-----------------------------------------+
+ | Cursor MCP Installer                   |
+ | Seamlessly install MCP servers         |
+ +-----------------------------------------+ 
+
+
+
+================================================
+FILE: src/index.mts
+================================================
+#!/usr/bin/env node
+
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+import * as os from "os";
+import * as fs from "fs";
+import * as path from "path";
+import { spawnPromise } from "spawn-rx";
+
+// Add startup logs for debugging
+console.log("Starting cursor-mcp-installer-free MCP server...");
+
+const server = new Server(
+  {
+    name: "cursor-mcp-installer-free",
+    version: "0.1.3",
+  },
+  {
+    capabilities: {
+      tools: {},
+    },
+  }
+);
+
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  return {
+    tools: [
+      {
+        name: "install_repo_mcp_server",
+        description: "Install an MCP server via npx or uvx",
+        inputSchema: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "The package name of the MCP server",
+            },
+            args: {
+              type: "array",
+              items: { type: "string" },
+              description: "The arguments to pass along",
+            },
+            env: {
+              type: "array",
+              items: { type: "string" },
+              description: "The environment variables to set, delimited by =",
+            },
+          },
+          required: ["name"],
+        },
+      },
+      {
+        name: "install_local_mcp_server",
+        description:
+          "Install an MCP server whose code is cloned locally on your computer",
+        inputSchema: {
+          type: "object",
+          properties: {
+            path: {
+              type: "string",
+              description:
+                "The path to the MCP server code cloned on your computer",
+            },
+            args: {
+              type: "array",
+              items: { type: "string" },
+              description: "The arguments to pass along",
+            },
+            env: {
+              type: "array",
+              items: { type: "string" },
+              description: "The environment variables to set, delimited by =",
+            },
+          },
+          required: ["path"],
+        },
+      },
+      {
+        name: "add_to_cursor_config",
+        description:
+          "Add any MCP server to Cursor's configuration",
+        inputSchema: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "Display name for the MCP server in Cursor",
+            },
+            command: {
+              type: "string",
+              description: "Command to execute (e.g., node, npx, python)",
+            },
+            args: {
+              type: "array",
+              items: { type: "string" },
+              description: "Arguments to pass to the command",
+            },
+            path: {
+              type: "string",
+              description: "Path to the MCP server on disk (optional, used instead of command+args)",
+            },
+            env: {
+              type: "array",
+              items: { type: "string" },
+              description: "Environment variables to set, delimited by =",
+            },
+          },
+          required: ["name"],
+        },
+      },
+    ],
+  };
+});
+
+async function hasNodeJs() {
+  try {
+    await spawnPromise("node", ["--version"]);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function hasUvx() {
+  try {
+    await spawnPromise("uvx", ["--version"]);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function isNpmPackage(name: string) {
+  try {
+    await spawnPromise("npm", ["view", name, "version"]);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// New helper functions for path handling and server detection
+
+/**
+ * Normalizes and validates a file path
+ * @param filePath The file path to normalize
+ * @param cwd Optional current working directory for resolving relative paths
+ * @returns Normalized absolute path
+ */
+function normalizeServerPath(filePath: string, cwd?: string): string {
+  // Handle file paths with spaces that might be unquoted
+  filePath = filePath.trim();
+  
+  // Convert relative to absolute path if needed
+  if (!path.isAbsolute(filePath) && cwd) {
+    filePath = path.resolve(cwd, filePath);
+  }
+  
+  // Return normalized path (even if it doesn't exist, as it might be a command)
+  return path.normalize(filePath);
+}
+
+/**
+ * Looks for a schema file in the provided arguments
+ * @param args Array of arguments to search
+ * @returns The schema file path if found, undefined otherwise
+ */
+function findSchemaFile(args?: string[]): string | undefined {
+  if (!args || args.length === 0) return undefined;
+  
+  // Check all arguments for schema files
+  return args.find(arg => 
+    arg && typeof arg === 'string' && 
+    /\.(yaml|yml|json|openapi)$/i.test(arg));
+}
+
+/**
+ * Finds a server entry point in a directory
+ * @param dirPath Directory to search
+ * @returns Object with path and command, or undefined if not found
+ */
+function findServerEntryPoint(dirPath: string): { path: string, command: string } | undefined {
+  // Look for common entry point patterns
+  const entryPointPatterns = [
+    // Node.js patterns
+    { file: 'index.js', command: 'node' },
+    { file: 'index.mjs', command: 'node' },
+    { file: 'server.js', command: 'node' },
+    { file: 'dist/index.js', command: 'node' },
+    { file: 'lib/index.js', command: 'node' },
+    { file: 'lib/index.mjs', command: 'node' },
+    // Python patterns
+    { file: 'server.py', command: 'python3' },
+    { file: 'main.py', command: 'python3' },
+    { file: '__main__.py', command: 'python3' }
+  ];
+  
+  for (const pattern of entryPointPatterns) {
+    const filePath = path.join(dirPath, pattern.file);
+    if (fs.existsSync(filePath)) {
+      return { path: filePath, command: pattern.command };
+    }
+  }
+  
+  return undefined;
+}
+
+function installToCursor(
+  name: string,
+  cmd: string,
+  args: string[],
+  env?: string[]
+) {
+  const configPath = path.join(os.homedir(), ".cursor", "mcp.json");
+  
+  // In Smithery environment, we may not have direct file system access
+  // Instead, return the config that would be written
+  const isInContainer = process.env.SMITHERY_CONTAINER === 'true';
+  
+  let config: any;
+  try {
+    if (!isInContainer && fs.existsSync(configPath)) {
+      config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+    } else {
+      config = { mcpServers: {} };
+    }
+  } catch (e) {
+    config = { mcpServers: {} };
+  }
+
+  const envObj = (env ?? []).reduce((acc, val) => {
+    const [key, value] = val.split("=");
+    acc[key] = value;
+
+    return acc;
+  }, {} as Record<string, string>);
+
+  // Normalize any file paths in args
+  const normalizedArgs = args.map(arg => {
+    // Only normalize if it looks like a file path
+    if (arg && typeof arg === 'string' && (arg.includes('/') || arg.includes('\\'))) {
+      try {
+        return normalizeServerPath(arg);
+      } catch (e) {
+        // If normalization fails, return the original arg
+        return arg;
+      }
+    }
+    return arg;
+  });
+
+  const newServer = {
+    command: cmd,
+    type: "stdio",
+    args: normalizedArgs,
+    ...(env ? { env: envObj } : {}),
+  };
+
+  config.mcpServers = config.mcpServers || {};
+  config.mcpServers[name] = newServer;
+  
+  if (!isInContainer && fs.existsSync(path.dirname(configPath))) {
+    try {
+      fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+      return true;
+    } catch (e) {
+      console.error("Failed to write config file:", e);
+      // Continue to return the config even if we can't write it
+    }
+  }
+  
+  // Return the configuration that would be written
+  return config;
+}
+
+function installRepoWithArgsToCursor(
+  name: string,
+  npmIfTrueElseUvx: boolean,
+  args?: string[],
+  env?: string[]
+) {
+  // If the name is in a scoped package, we need to remove the scope
+  const serverName = /^@.*\//i.test(name) ? name.split("/")[1] : name;
+  
+  // For Cursor, create a friendly display name
+  const formattedName = serverName
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, l => l.toUpperCase());
+
+  // Check if we're using a package that requires special handling
+  if (name === 'mcp-openapi-schema' || name.includes('openapi-schema')) {
+    // For OpenAPI schema servers, find schema file anywhere in the arguments
+    const schemaFile = findSchemaFile(args);
+    
+    if (schemaFile) {
+      // Special configuration for OpenAPI schema servers
+      // First try to get the installed package path
+      try {
+        const packagePath = path.dirname(require.resolve(`${name}/package.json`));
+        const indexPath = path.join(packagePath, 'index.mjs');
+        
+        if (fs.existsSync(indexPath)) {
+          // Create new args array with normalized schema path
+          const newArgs = args?.map(arg => {
+            if (arg === schemaFile) {
+              try {
+                return normalizeServerPath(schemaFile, process.cwd());
+              } catch (e) {
+                return arg;
+              }
+            }
+            return arg;
+          }) ?? [];
+          
+          installToCursor(
+            formattedName,
+            'node',
+            [indexPath, ...newArgs],
+            env
+          );
+          return;
+        }
+      } catch (error) {
+        console.warn(`Couldn't resolve ${name} package path, falling back to npx`);
+      }
+    }
+  }
+  
+  // Check if this is a Python package
+  if (!npmIfTrueElseUvx || name.includes('x-mcp') || name.includes('python') || name.endsWith('.py')) {
+    // For Python MCP servers, we should use python -m module_name pattern instead of uvx
+    // This helps ensure proper module paths and environment
+    
+    const moduleName = name.replace(/-/g, '_').replace(/\.git$/, '');
+    // Extract module name from common patterns like username/repo-name.git
+    const cleanModuleName = moduleName.includes('/') ? 
+      moduleName.split('/').pop()!.replace(/\.git$/, '') : 
+      moduleName;
+    
+    // For X Twitter MCP specifically
+    if (name.includes('x-mcp')) {
+      installToCursor(
+        'X Twitter Tools',
+        'python3',
+        ['-m', `${cleanModuleName.replace(/-/g, '_')}.server`],
+        env
+      );
+      return;
+    }
+    
+    // For other Python-based MCP servers
+    installToCursor(
+      formattedName,
+      'python3',
+      ['-m', cleanModuleName],
+      env
+    );
+    return;
+  }
+
+  // Default case - use npx/uvx
+  installToCursor(
+    formattedName,
+    npmIfTrueElseUvx ? "npx" : "uvx",
+    ["-y", name, ...(args ?? [])],
+    env
+  );
+}
+
+async function attemptNodeInstall(
+  directory: string
+): Promise<Record<string, string>> {
+  await spawnPromise("npm", ["install"], { cwd: directory });
+
+  // Run down package.json looking for bins
+  const pkg = JSON.parse(
+    fs.readFileSync(path.join(directory, "package.json"), "utf-8")
+  );
+
+  const result: Record<string, string> = {};
+
+  // Check for bin entries first
+  if (pkg.bin) {
+    Object.keys(pkg.bin).forEach(key => {
+      result[key] = normalizeServerPath(pkg.bin[key], directory);
+    });
+  }
+
+  // If no bins, try main entry point
+  if (Object.keys(result).length === 0 && pkg.main) {
+    result[pkg.name] = normalizeServerPath(pkg.main, directory);
+  }
+
+  // If still no results, try to find a server entry point
+  if (Object.keys(result).length === 0) {
+    const entryPoint = findServerEntryPoint(directory);
+    if (entryPoint) {
+      result[pkg.name || 'server'] = entryPoint.path;
+    }
+  }
+
+  return result;
+}
+
+async function addToCursorConfig(
+  name: string,
+  command?: string, 
+  args?: string[],
+  serverPath?: string,
+  env?: string[]
+) {
+  const isInContainer = process.env.SMITHERY_CONTAINER === 'true';
+  
+  // Handle the case where the user provides either a command or a path
+  if (!serverPath && !command) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: "Error: You must provide either a command or a path!",
+        },
+      ],
+      isError: true,
+    };
+  }
+  
+  try {
+    // If a server path is provided, use that instead of the command+args
+    if (serverPath) {
+      // Normalize the server path
+      const normalizedPath = normalizeServerPath(serverPath, process.cwd());
+      
+      if (!isInContainer && !fs.existsSync(normalizedPath)) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: Path ${normalizedPath} does not exist!`,
+            },
+          ],
+          isError: true,
+        };
+      }
+      
+      // Use node to run the server if it's a JavaScript file
+      if (normalizedPath.endsWith('.js') || normalizedPath.endsWith('.mjs')) {
+        command = 'node';
+        args = [normalizedPath, ...(args || [])];
+      } else if (normalizedPath.endsWith('.py')) {
+        // Use python for Python files
+        command = 'python3';
+        args = [normalizedPath, ...(args || [])];
+      } else {
+        // Otherwise use the serverPath as the command
+        command = normalizedPath;
+        args = args || [];
+      }
+    } else if (args) {
+      // If we have command and args, normalize any file paths in args
+      args = args.map(arg => {
+        // Only normalize if it looks like a file path
+        if (arg && typeof arg === 'string' && (arg.includes('/') || arg.includes('\\'))) {
+          try {
+            return normalizeServerPath(arg, process.cwd());
+          } catch (e) {
+            // If normalization fails, return the original arg
+            return arg;
+          }
+        }
+        return arg;
+      });
+    }
+    
+    // Create server config
+    const envObj = (env ?? []).reduce((acc: Record<string, string>, val) => {
+      const [key, value] = val.split("=");
+      if (key) acc[key] = value || "";
+      return acc;
+    }, {} as Record<string, string>);
+    
+    const serverConfig = {
+      command: command!,  // We've verified either command or serverPath is provided
+      type: "stdio",
+      args: args || [],
+      ...(env && env.length > 0 ? { env: envObj } : {})
+    };
+    
+    if (isInContainer) {
+      // In Smithery, just return the configuration
+      const config: { mcpServers: Record<string, any> } = { mcpServers: {} };
+      config.mcpServers[name] = serverConfig;
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Here's the configuration to add to your ~/.cursor/mcp.json file:\n\n` +
+                  `\`\`\`json\n${JSON.stringify(config, null, 2)}\n\`\`\`\n\n` +
+                  `After adding this configuration, restart Cursor to apply the changes.`
+          },
+        ],
+      };
+    } else {
+      // In local environment, update the config file
+      const configPath = path.join(os.homedir(), ".cursor", "mcp.json");
+      
+      let config: { mcpServers: Record<string, any> };
+      try {
+        config = fs.existsSync(configPath) 
+          ? JSON.parse(fs.readFileSync(configPath, "utf8")) 
+          : { mcpServers: {} };
+      } catch (e) {
+        config = { mcpServers: {} };
+      }
+      
+      config.mcpServers = config.mcpServers || {};
+      config.mcpServers[name] = serverConfig;
+      
+      fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Successfully added ${name} to your Cursor configuration! Please restart Cursor to apply the changes.`,
+          },
+        ],
+      };
+    }
+  } catch (e) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Error: ${e}`,
+        },
+      ],
+      isError: true,
+    };
+  }
+}
+
+async function installLocalMcpServer(
+  dirPath: string,
+  args?: string[],
+  env?: string[]
+) {
+  const isInContainer = process.env.SMITHERY_CONTAINER === 'true';
+  
+  if (isInContainer) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: "Local directory installation is not available in the Smithery environment. " +
+                "Please use this tool locally with Cursor to install from local directories.",
+        },
+      ],
+      isError: true,
+    };
+  }
+
+  try {
+    // Normalize the directory path
+    const normalizedDirPath = normalizeServerPath(dirPath, process.cwd());
+    
+    if (!fs.existsSync(normalizedDirPath)) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Path ${normalizedDirPath} does not exist locally!`,
+          },
+        ],
+        isError: true,
+      };
+    }
+
+    // Check if it's a Node.js package with package.json
+    if (fs.existsSync(path.join(normalizedDirPath, "package.json"))) {
+      const servers = await attemptNodeInstall(normalizedDirPath);
+
+      if (Object.keys(servers).length > 0) {
+        Object.keys(servers).forEach((name) => {
+          // Install to Cursor
+          const formattedName = name
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+            
+          installToCursor(
+            formattedName,
+            "node",
+            [servers[name], ...(args ?? [])],
+            env
+          );
+        });
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Installed the following servers to Cursor: ${Object.keys(
+                servers
+              ).join(", ")}. Please restart Cursor to apply the changes.`,
+            },
+          ],
+        };
+      }
+    }
+
+    // If not a Node.js package or no server found, try to find a server entry point
+    const entryPoint = findServerEntryPoint(normalizedDirPath);
+    if (entryPoint) {
+      // Get the directory name for a default name
+      const dirName = path.basename(normalizedDirPath);
+      const formattedName = dirName
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase());
+        
+      installToCursor(
+        formattedName,
+        entryPoint.command,
+        [entryPoint.path, ...(args ?? [])],
+        env
+      );
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Installed ${formattedName} to Cursor. Please restart Cursor to apply the changes.`,
+          },
+        ],
+      };
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Can't figure out how to install ${normalizedDirPath}. No server entry point was found.`,
+        },
+      ],
+      isError: true,
+    };
+  } catch (e) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Error installing from local directory: ${e}`,
+        },
+      ],
+      isError: true,
+    };
+  }
+}
+
+async function installRepoMcpServer(
+  name: string,
+  args?: string[],
+  env?: string[]
+) {
+  if (!(await hasNodeJs())) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: "Error: Node.js is not installed, please install it!",
+        },
+      ],
+      isError: true,
+    };
+  }
+
+  const isNpm = await isNpmPackage(name);
+  const hasUv = await hasUvx();
+
+  if (!isNpm && !hasUv) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: "Error: Package not found in npm registry and uvx is not installed!",
+        },
+      ],
+      isError: true,
+    };
+  }
+
+  const isInContainer = process.env.SMITHERY_CONTAINER === 'true';
+
+  try {
+    if (isInContainer) {
+      // In Smithery, we can't directly install - provide instructions instead
+      const packageManager = isNpm ? "npm" : "uvx";
+      const configResult = installRepoWithArgsToCursor(name, isNpm, args, env);
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Instructions for installing ${name}:\n\n` +
+                  `1. Install the package with: ${packageManager} install -g ${name}\n\n` +
+                  `2. Add the following to your ~/.cursor/mcp.json file:\n\n` +
+                  `\`\`\`json\n${JSON.stringify(configResult, null, 2)}\n\`\`\`\n\n` +
+                  `3. Restart Cursor and the MCP server will be available`
+          },
+        ],
+      };
+    } else {
+      // Normal direct installation
+      installRepoWithArgsToCursor(name, isNpm, args, env);
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Successfully installed the ${name} MCP server!`,
+          },
+        ],
+      };
+    }
+  } catch (e) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Error: ${e}`,
+        },
+      ],
+      isError: true,
+    };
+  }
+}
+
+// Add the server request handler for tool calls
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  try {
+    if (request.params.name === "install_repo_mcp_server") {
+      const { name, args, env } = request.params.arguments as {
+        name: string;
+        args?: string[];
+        env?: string[];
+      };
+
+      return await installRepoMcpServer(name, args, env);
+    }
+
+    if (request.params.name === "install_local_mcp_server") {
+      const dirPath = request.params.arguments!.path as string;
+      const { args, env } = request.params.arguments as {
+        args?: string[];
+        env?: string[];
+      };
+
+      return await installLocalMcpServer(dirPath, args, env);
+    }
+    
+    if (request.params.name === "add_to_cursor_config") {
+      const { name, command, args, path: serverPath, env } = request.params.arguments as {
+        name: string;
+        command?: string;
+        args?: string[];
+        path?: string;
+        env?: string[];
+      };
+
+      return await addToCursorConfig(name, command, args, serverPath, env);
+    }
+
+    throw new Error(`Unknown tool: ${request.params.name}`);
+  } catch (err) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Error setting up package: ${err}`,
+        },
+      ],
+      isError: true,
+    };
+  }
+});
+
+async function runServer() {
+  console.log("Initializing MCP server transport...");
+  const transport = new StdioServerTransport();
+  console.log("Connecting MCP server...");
+  await server.connect(transport);
+  console.log("MCP server connected and ready");
+}
+
+runServer().catch((error) => {
+  console.error("Error starting MCP server:", error);
+  process.exit(1);
+});
+
+
