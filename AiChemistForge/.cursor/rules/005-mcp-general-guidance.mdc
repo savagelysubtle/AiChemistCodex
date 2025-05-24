@@ -1,0 +1,148 @@
+---
+description: WHEN working on any aspect of the AiChemist Forge project (see @README.md) THEN consistently apply MCP transport best practices (lifecycle, error handling, security, etc.) TO ensure robust, secure, and maintainable MCP components.
+globs:
+alwaysApply: false
+---
+---
+description: "WHEN working on any aspect of the AiChemist Forge project (see [README.md](mdc:README.md)) THEN consistently apply MCP transport best practices (lifecycle, error handling, security, etc.) TO ensure robust, secure, and maintainable MCP components."
+globs:
+  - "**/*"
+---
+<cursor-rule>
+  <version>1.0.0</version>
+  <context>
+    This rule provides general guidance and encapsulates best practices for Model Context Protocol (MCP) development within the AiChemist Forge workspace. It aims to ensure consistency, robustness, and maintainability across all MCP components. Key project context can be found in the main [README.md](mdc:README.md) file. This rule draws from [MCP Transport Best Practices](mdc:httpscolonslashslashmodelcontextprotocol.iodocsslashconceptsslashstransports#best-practices).
+  </context>
+
+  <requirements>
+    <requirement>
+      <type>ProjectContextAwareness</type>
+      <guideline>Always consider the overall architecture and goals of the AiChemist Forge project, as outlined in [README.md](mdc:README.md) and other relevant documentation in `Compendium/`, when designing or modifying MCP components.</guideline>
+    </requirement>
+    <requirement>
+      <type>ConnectionLifecycle</type>
+      <guideline>Properly manage the entire lifecycle of MCP connections: initialization, active communication, and graceful termination. Ensure resources are released reliably.</guideline>
+    </requirement>
+    <requirement>
+      <type>ErrorHandling</type>
+      <guideline>Implement comprehensive error handling as detailed in the `010-mcp-transport-error-handling.mdc` rule. This includes connection issues, message validation, and processing errors.</guideline>
+    </requirement>
+    <requirement>
+      <type>ResourceCleanup</type>
+      <guideline>Diligently clean up all resources (network sockets, file handles, child processes, task groups, etc.) on connection close, errors, or server shutdown to prevent leaks and ensure stability.</guideline>
+    </requirement>
+    <requirement>
+      <type>Timeouts</type>
+      <guideline>Use appropriate timeouts for network operations, message responses, and other potentially blocking calls to prevent indefinite hangs and improve responsiveness.</guideline>
+    </requirement>
+    <requirement>
+      <type>MessageValidation</type>
+      <guideline>Validate incoming messages for correct format (JSON-RPC), expected parameters, and data types before processing to prevent errors and potential security vulnerabilities.</guideline>
+    </requirement>
+    <requirement>
+      <type>LoggingForDebugging</type>
+      <guideline>Implement clear and informative logging for transport events, message flows, errors, and state changes to facilitate debugging and monitoring.</guideline>
+    </requirement>
+    <requirement>
+      <type>ReconnectionLogic</type>
+      <guideline>For client-side or long-lived connections, consider implementing reconnection logic with appropriate backoff strategies if transient network issues are expected.</guideline>
+    </requirement>
+    <requirement>
+      <type>BackpressureHandling</type>
+      <guideline>Be mindful of backpressure in message queues or streams. If messages are produced faster than they can be consumed, implement strategies to handle or mitigate this (e.g., dropping, buffering with limits, flow control).</guideline>
+    </requirement>
+    <requirement>
+      <type>Security</type>
+      <guideline>Adhere to security best practices relevant to the transport being used (e.g., TLS for network, validating Origin headers for SSE, input sanitization). Refer to specific security sections in MCP documentation.</guideline>
+    </requirement>
+    <requirement>
+      <type>ModularityAndClarity</type>
+      <guideline>Strive for modular design and clear code. Transport logic should be well-encapsulated and understandable.</guideline>
+    </requirement>
+  </requirements>
+
+  <examples>
+    <good-practice>
+      <description>Conceptual good practice: A component that initializes, handles messages with error checks, and cleans up.</description>
+      <example>
+// PSEUDOCODE (Illustrative)
+class RobustMCPComponent {
+  constructor() {
+    // Initialize resources
+    // console.log("Component initializing, adhering to MCP best practices.");
+  }
+
+  async connectTransport(transport) {
+    // transport.onmessage = this.handleMessage.bind(this);
+    // transport.onerror = this.handleError.bind(this);
+    // transport.onclose = this.cleanup.bind(this);
+    // await transport.start();
+    // console.log("Transport connected, lifecycle managed.");
+  }
+
+  handleMessage(message) {
+    // try {
+    //   validateMessage(message); // MessageValidation
+    //   processMessage(message);
+    // } catch (e) {
+    //   this.handleError(e, message); // ErrorHandling
+    // }
+  }
+
+  handleError(error, contextMessage) {
+    // logError(error, contextMessage); // LoggingForDebugging
+    // Maybe send error response if applicable
+  }
+
+  async cleanup() {
+    // console.log("Cleaning up resources..."); // ResourceCleanup
+    // Close connections, release handles, etc.
+    // console.log("Cleanup complete.");
+  }
+}
+      </example>
+    </good-practice>
+    <bad-practice>
+      <description>Conceptual bad practice: A component that neglects lifecycle, error handling, or resource management.</description>
+      <example>
+// PSEUDOCODE (Illustrative)
+class FragileMCPComponent {
+  constructor() {
+    // May leak resources if not managed
+  }
+
+  // No clear connection lifecycle management
+  // Missing robust error handling for message processing
+  // No explicit resource cleanup method or it\'s unreliable
+  processMessageUnsafe(message) {
+    // Directly process without validation - risk of crash or bad state
+    // const result = FailableOperation(message.payload);
+    // If FailableOperation throws, component might be left in inconsistent state
+    // console.log("Processed... maybe? Errors not handled, resources might leak.");
+  }
+  // No timeout considerations for operations
+  // Security aspects might be overlooked
+}
+      </example>
+    </bad-practice>
+  </examples>
+
+  <critical-instructions>
+    <instruction>ALWAYS manage connection lifecycles carefully.</instruction>
+    <instruction>ALWAYS implement robust error handling and resource cleanup.</instruction>
+    <instruction>ALWAYS consider security implications of the chosen transport and implementation.</instruction>
+    <instruction>Refer to the main project [README.md](mdc:README.md) for overarching project goals when developing MCP tools.</instruction>
+  </critical-instructions>
+</cursor-rule>
+
+
+
+
+
+
+
+
+
+
+
+

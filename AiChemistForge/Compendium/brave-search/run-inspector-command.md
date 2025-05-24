@@ -1,0 +1,1 @@
+npx @modelcontextprotocol/inspector -e BRAVE_API_KEY="BSAYxTqPMXghaOTXCI-pk_Aue3J1DuJ" node D:/Coding/AiChemistCodex/AiChemistForge/ToolRack/brave-search/dist/server.js

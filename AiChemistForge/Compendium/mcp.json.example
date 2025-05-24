@@ -1,0 +1,59 @@
+{
+  "mcpServers": {
+    "MCP Installer-Global": {
+      "command": "node",
+      "type": "stdio",
+      "args": ["D:\\Coding\\TheToolShed\\cursor-mcp-installer\\lib\\index.mjs"]
+    },
+    "Server Win Cli-Global": {
+      "command": "node",
+      "type": "stdio",
+      "args": [
+        "D:\\Coding\\TheToolShed\\ToolRack\\win-cli-mcp-server\\dist\\index.js"
+      ]
+    },
+    "AiChemistCompendium": {
+      "command": "node",
+      "transport": "stdio",
+      "args": [
+        "D:\\Coding\\AiChemistCodex\\AiChemistCompendium\\build\\main.js",
+        "D:\\Coding\\AiChemistCodex\\AiChemistCompendium\\docs-obsidian"
+      ],
+      "cwd": "D:\\Coding\\AiChemistCodex\\AiChemistCompendium"
+    },
+    "brave-search-Global": {
+      "command": "node",
+      "type": "stdio",
+      "args": [
+        "D:\\Coding\\TheToolShed\\ToolRack\\brave-search\\dist\\index.js"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "BSAyachsG9qkz0X_loXaibZdnJOxM8l"
+      }
+    },
+    "cursor-db-mcp": {
+      "command": "D:\\Coding\\TheToolShed\\ToolRack\\cursor-db-mcp\\.venv\\Scripts\\uv.exe",
+      "type": "stdio",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "cursor_db_mcp.main"
+      ],
+      "cwd": "D:\\Coding\\TheToolShed\\ToolRack\\cursor-db-mcp\\",
+      "enabled": true
+    },
+    "local-file-ingest": {
+      "command": "D:\\Coding\\TheToolShed\\ToolRack\\local-file-ingest\\.venv\\Scripts\\uv.exe",
+      "type": "stdio",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "local_file_ingest.main"
+      ],
+      "cwd": "D:\\Coding\\TheToolShed\\ToolRack\\local-file-ingest",
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,224 @@
+---
+description:
+globs: **/*.py,**/*.ts
+alwaysApply: false
+---
+---
+description: "WHEN building MCP servers in Python or TypeScript THEN initialize the server, define tools with type hints/docstrings, use helper functions for logic, and run the server with appropriate transport (e.g., stdio for local)."
+globs:
+  - "**/*.py"
+  - "**/*.ts"
+---
+<cursor-rule>
+  <version>1.0.0</version>
+  <context>
+    This rule provides guidance for constructing Model Context Protocol (MCP) servers in Python (specifically using `FastMCP` or similar) and TypeScript. It covers server initialization, tool definition, the use of helper functions, and running the server, based on common patterns and the [MCP Quickstart for Servers](mdc:httpscolonslashslashmodelcontextprotocol.ioquickstartslashserver#building-your-server).
+  </context>
+
+  <requirements>
+    <requirement lang="python">
+      <type>ServerInitialization</type>
+      <guideline>Initialize your MCP server using a dedicated class, such as `FastMCP`, providing a server name (e.g., `mcp = FastMCP("my-server-name")`).</guideline>
+    </requirement>
+    <requirement lang="typescript">
+      <type>ServerInitialization</type>
+      <guideline>Initialize your MCP server using the `Server` class, providing a name and version (e.g., `const server = new Server({ name: "my-ts-server", version: "1.0.0" }, { capabilities: {} });`).</guideline>
+    </requirement>
+    <requirement>
+      <type>ToolDefinition</type>
+      <guideline>Define tools as functions or methods. In Python with `FastMCP`, use the `@mcp.tool()` decorator. In both Python and TypeScript, use type hints for arguments and return types, and include clear docstrings/JSDoc comments. These are often used to automatically generate tool definitions for the MCP client.</guideline>
+    </requirement>
+    <requirement>
+      <type>HelperFunctions</type>
+      <guideline>Encapsulate complex logic, external API calls, or data formatting into separate helper functions. These functions should also use type hints and have clear docstrings/JSDoc.</guideline>
+    </requirement>
+    <requirement lang="python">
+      <type>RunningTheServer</type>
+      <guideline>Run the MCP server using its `run()` method, typically specifying the transport. For local development, `mcp.run(transport='stdio')` is common. This is often placed within an `if __name__ == "__main__":` block.</guideline>
+    </requirement>
+    <requirement lang="typescript">
+      <type>RunningTheServer</type>
+      <guideline>Connect the server to a transport instance (e.g., `StdioServerTransport`) using `await server.connect(transport);`. The transport should then be started if it doesn't start automatically upon connection.</guideline>
+    </requirement>
+    <requirement>
+      <type>ErrorHandlingInTools</type>
+      <guideline>Tool execution handlers should gracefully handle errors (e.g., API request failures, unexpected data) and return informative messages to the client instead of crashing.</guideline>
+    </requirement>
+    <requirement>
+      <type>AsynchronousOperations</type>
+      <guideline>Use `async` and `await` for I/O-bound operations within tools and helper functions (e.g., HTTP requests) to ensure the server remains responsive.</guideline>
+    </requirement>
+  </requirements>
+
+  <examples>
+    <good-practice lang="python">
+      <description>Correctly structuring an MCP server in Python using FastMCP.</description>
+      <example>
+from typing import Any
+import httpx # For async HTTP requests
+from mcp.server.fastmcp import FastMCP # Assuming this is the correct import
+
+# Initialize FastMCP server
+mcp = FastMCP("example_python_server")
+
+# Constants for external API (example)
+API_BASE_URL = "https://api.example.com"
+USER_AGENT = "my-mcp-tool/1.0"
+
+async def make_api_request(url: str, params: dict = None) -> dict[str, Any] | None:
+    """Helper function to make an API request with error handling."""
+    headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url, headers=headers, params=params, timeout=10.0)
+            response.raise_for_status() # Raises HTTPStatusError for 4xx/5xx
+            return response.json()
+        except httpx.HTTPStatusError as e:
+            print(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
+            return None
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            return None
+
+@mcp.tool()
+async def get_service_status(service_id: str) -> str:
+    """Get the status of a specified service.
+
+    Args:
+        service_id: The unique identifier for the service.
+    """
+    request_url = f"{API_BASE_URL}/status/{service_id}"
+    data = await make_api_request(request_url)
+
+    if not data:
+        return f"Unable to fetch status for service {service_id}."
+
+    return f"Service {service_id} status: {data.get('status', 'Unknown')}"
+
+if __name__ == "__main__":
+    print("Starting Python MCP server...")
+    mcp.run(transport='stdio')
+      </example>
+    </good-practice>
+
+    <bad-practice lang="python">
+      <description>Incorrectly structured or missing key elements for an MCP server in Python.</description>
+      <example>
+# Missing FastMCP import or initialization
+# No clear tool definition with @mcp.tool()
+# Blocking I/O operations without async/await
+
+def get_status_blocking(service_id): # Not async
+    # import requests # Using synchronous requests directly in tool
+    # response = requests.get(f"https://api.example.com/status/{service_id}") # Blocking call
+    # This would block the server
+    # if response.status_code == 200:
+    #     return response.json().get('status', 'Unknown')
+    # return "Error fetching status"
+    pass
+
+# Server not run correctly, or transport not specified for local use
+# if __name__ == "__main__":
+#    print("Server might not run or be accessible as expected.")
+      </example>
+    </bad-practice>
+
+    <good-practice lang="typescript">
+      <description>Correctly structuring an MCP server in TypeScript.</description>
+      <example>
+import { Server, StdioServerTransport, ToolContext } from "@mcp/core"; // Fictional import path
+import httpx from "httpx"; // Assuming a TypeScript HTTP client like httpx
+
+const API_BASE_URL = "https://api.example.com";
+const USER_AGENT = "my-mcp-tool-ts/1.0";
+
+async function makeApiRequest(url: string, params?: Record<string, any>): Promise<any | null> {
+  const headers = { "User-Agent": USER_AGENT, "Accept": "application/json" };
+  try {
+    const client = new httpx.HttpClient({}); // Example instantiation
+    const response = await client.get(url, { headers, params, timeout: 10000 });
+    if (response.statusCode !== 200) {
+        console.error(`HTTP error: ${response.statusCode}`);
+        return null;
+    }
+    return JSON.parse(response.body);
+  } catch (error) {
+    console.error(`Request failed: ${error}`);
+    return null;
+  }
+}
+
+async function startServer() {
+  const server = new Server(
+    { name: "example-ts-server", version: "1.0.0" },
+    { capabilities: {} }
+  );
+
+  /**
+   * Get the status of a specified service from the example API.
+   * @param serviceId The unique identifier for the service.
+   * @param context The MCP tool context.
+   * @returns A string describing the service status or an error message.
+   */
+  server.tool("get_service_status_ts", async (serviceId: string, context: ToolContext): Promise<string> => {
+    const requestUrl = `${API_BASE_URL}/status/${serviceId}`;
+    const data = await makeApiRequest(requestUrl);
+
+    if (!data) {
+      return `Unable to fetch status for service ${serviceId}.`;
+    }
+    return `Service ${serviceId} status: ${data.status || 'Unknown'}`;
+  });
+
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.log("TypeScript MCP server connected via stdio.");
+}
+
+startServer().catch(console.error);
+      </example>
+    </good-practice>
+
+    <bad-practice lang="typescript">
+      <description>Incorrectly structured or missing key elements for an MCP server in TypeScript.</description>
+      <example>
+// Missing Server import or initialization
+// Tools defined without clear async/await for I/O or proper error handling
+
+// No docstring or clear type hints for params/return
+async function getStatusNoTypes(serviceId) {
+    // const response = await fetch(`https://api.example.com/status/${serviceId}`); // No error handling
+    // const data = await response.json(); // Could fail
+    // return data.status;
+    return "status"; // Placeholder
+}
+
+// Server not connected to a transport or transport not started
+async function main() {
+    // const server = new Server(...);
+    // server.tool("getStatus", getStatusNoTypes);
+    // Missing: const transport = new StdioServerTransport();
+    // Missing: await server.connect(transport);
+    console.log("TS Server might not be accessible.");
+}
+// main();
+      </example>
+    </bad-practice>
+  </examples>
+
+  <critical-instructions>
+    <instruction lang="python">ALWAYS use `@mcp.tool()` (or equivalent registration method) for defining tools in `FastMCP` based servers.</instruction>
+    <instruction lang="typescript">ALWAYS register tools with the `server.tool()` method, providing a name, the async handler function, and ensuring type hints and JSDoc are present for clarity and potential auto-generation of schemas.</instruction>
+    <instruction>ALWAYS use `async`/`await` for I/O-bound operations within tools.</instruction>
+    <instruction>ENSURE type hints and descriptive docstrings/JSDoc are used for all tools and helper functions.</instruction>
+    <instruction>For local development and CLI tools, run the server using stdio transport.</instruction>
+  </critical-instructions>
+</cursor-rule>
+
+
+
+
+
+
+
+

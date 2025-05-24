@@ -1,0 +1,111 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Project Configuration Standards
+
+This rule defines comprehensive configuration standards for all AI Research Agent projects, using nested JSON formatting for clarity and consistency.
+
+## Configuration Structure
+
+```json
+{
+  "project_standards": {
+    "environment": {
+      "host_machine": "Windows 11 Pro",
+      "shell": "PowerShell",
+      "command_convention": "Use PowerShell commands",
+      "package_managers": {
+        "primary": "uv",
+        "commands": ["uv add", "uv pip install"],
+        "formatter": "ruff",
+        "typechecker": "ty",
+        "description": "Astral UV package manager with Ruff formatter and Ty typechecker"
+      }
+    },
+    "code_standards": {
+      "security": {
+        "secrets": "Never hard-code secrets - always use environment variables or secrets vault",
+        "input_validation": "Sanitize all external inputs",
+        "error_handling": {
+          "principle": "Catch only specific exceptions",
+          "practice": "Re-raise unexpected errors with full context",
+          "credentials": "Always require credentials via environment variables"
+        }
+      },
+      "documentation": {
+        "comments": "Add meaningful comments to complex code",
+        "docstrings": {
+          "large_functions": "Google style for classes and large functions",
+          "small_functions": "NumPy style for small functions and utilities",
+          "guidelines": "Keep concise; omit long examples unless essential"
+        }
+      },
+      "typing": {
+        "requirement": "Type hints are mandatory",
+        "restriction": "Avoid using Any type",
+        "naming": "PEP 8 naming: verbs for functions, nouns for classes"
+      }
+    },
+    "workflow_standards": {
+      "project_understanding": {
+        "priority": "CRITICAL - Always understand project context first",
+        "steps": [
+          "Obtain file tree of project root",
+          "Read key files to understand codebase context",
+          "Use project context to guide all actions"
+        ]
+      },
+      "task_management": {
+        "approach": "Break complex tasks into clear, manageable steps",
+        "context_usage": "Use all available context before responding",
+        "communication": "Ask clarifying questions when request is ambiguous",
+        "analysis": "Read relevant files and reflect before proceeding",
+        "completion": "Finish analysis before responding to user"
+      },
+      "large_refactors": {
+        "organization": "Create root-level plans/ folder",
+        "structure": "Subfolders per feature containing concise refactor plans"
+      }
+    },
+    "formatting_standards": {
+      "python": {
+        "formatter": "Black with line length 88",
+        "style": "Hanging commas, f-strings, and proper spacing",
+        "configuration": "Ensure ruff.toml or pyproject.toml is properly configured"
+      },
+      "logging": {
+        "requirement": "Use logging module at INFO level by default",
+        "restriction": "Never use print() for runtime messages"
+      }
+    },
+    "package_management": {
+      "dependencies_file": "dep.toml",
+      "purpose": "Keep pyproject.toml clean by separating dependencies",
+      "maintenance": "Regularly check .toml files for correct setup",
+      "examples": ["uv.toml", "ruff.toml"]
+    },
+    "communication_standards": {
+      "tone": {
+        "style": "Clear, helpful, and concise teaching tone",
+        "features": [
+          "Step-by-step explanations",
+          "Helpful hints",
+          "Use analogies for complex topics when appropriate"
+        ]
+      }
+    }
+  }
+}
+```
+
+## Implementation Guidelines
+
+When working on any AI Research Agent project, reference this configuration structure to ensure consistency across all components and maintain high code quality standards.
+
+### Key References
+- Main configuration: @general.json
+- Project structure: @pyproject.toml
+- Dependencies: @uv.lock
+

@@ -1,0 +1,176 @@
+---
+description: WHEN developing local MCP servers in Python or TypeScript THEN preferentially use Stdio transport for communication and logging TO ensure compatibility with local tooling and simplify debugging.
+globs:
+alwaysApply: false
+---
+---
+description: "WHEN developing local MCP servers in Python or TypeScript THEN preferentially use Stdio transport for communication and logging TO ensure compatibility with local tooling and simplify debugging."
+globs:
+  - "**/*.py"
+  - "**/*.ts"
+---
+<cursor-rule>
+  <version>1.0.0</version>
+  <context>
+    This rule promotes the use of Standard Input/Output (stdio) transport for local Model Context Protocol (MCP) server development. For local servers, especially during development and testing, stdio is often the simplest and most direct way to handle communication and observe logs, aligning with common command-line tool integrations. See [MCP Transports: Stdio](mdc:httpscolonslashslashmodelcontextprotocol.iodocsslashconceptsslashstransports#standard-input%2Foutput-stdio) for more details.
+  </context>
+
+  <requirements>
+    <requirement>
+      <type>TransportSelection</type>
+      <guideline>For MCP servers intended for local execution or integration with command-line tools, prioritize `StdioServerTransport` (TypeScript) or `stdio_server` (Python) over more complex transports like SSE or WebSockets unless specific features of those transports are required.</guideline>
+    </requirement>
+    <requirement>
+      <type>Logging</type>
+      <guideline>When using stdio transport, ensure that server logs and diagnostic messages are directed to standard output or standard error, making them easily accessible in the terminal where the server is run.</guideline>
+    </requirement>
+    <requirement>
+      <type>Simplicity</type>
+      <guideline>Avoid adding custom or complex logging frameworks on top of stdio for local servers if basic print statements or standard library logging to stdout/stderr suffice. The goal is to keep local development straightforward.</guideline>
+    </requirement>
+  </requirements>
+
+  <examples>
+    <good-practice lang="typescript">
+      <description>Correctly using StdioServerTransport in TypeScript for a local MCP server.</description>
+      <example>
+// MCP Server Initialization
+import { Server, StdioServerTransport } from "@mcp/core"; // Fictional import path
+
+async function startServer() {
+  const server = new Server({
+    name: "example-local-ts-server",
+    version: "1.0.0"
+  }, {
+    capabilities: { /* ... capabilities ... */ }
+  });
+
+  // Use StdioServerTransport for local communication
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+
+  console.log("MCP server connected via stdio transport."); // Logging to stdout
+}
+
+startServer();
+      </example>
+    </good-practice>
+
+    <bad-practice lang="typescript">
+      <description>Unnecessarily using a complex transport or logging for a simple local MCP server in TypeScript.</description>
+      <example>
+// MCP Server Initialization
+import { Server, SSEServerTransport } from "@mcp/core"; // Fictional import path
+import express from "express";
+// import SomeComplexLogger from 'some-complex-logger'; // Unnecessary for simple local server
+
+// const logger = SomeComplexLogger.initialize(); // Overcomplicates local logging
+
+async function startServer() {
+  const app = express();
+  const server = new Server({
+    name: "example-local-ts-server",
+    version: "1.0.0"
+  }, {
+    capabilities: { /* ... capabilities ... */ }
+  });
+
+  // Using SSE transport when stdio would suffice for local use
+  let transport: SSEServerTransport | null = null;
+  app.get("/sse", (req, res) => {
+    transport = new SSEServerTransport("/messages", res);
+    server.connect(transport);
+    // logger.info("SSE transport connected");
+  });
+  app.post("/messages", (req, res) => {
+    if (transport) {
+      transport.handlePostMessage(req, res);
+    }
+  });
+  app.listen(3000, () => {
+    // logger.info("Server listening on port 3000 for SSE");
+    console.log("Server using SSE, potentially overly complex for local-only CLI interaction.");
+  });
+}
+
+startServer();
+      </example>
+    </bad-practice>
+
+    <good-practice lang="python">
+      <description>Correctly using stdio_server in Python for a local MCP server.</description>
+      <example>
+# MCP Server Initialization
+from mcp import Server, stdio_server # Fictional import path
+import asyncio
+
+async def main():
+  app = Server("example-local-py-server")
+
+  # Capabilities would be added to the app instance
+  # e.g., app.tool("my_tool", my_tool_handler)
+
+  print("Starting MCP server with stdio transport...") # Logging to stdout
+  async with stdio_server() as streams:
+      await app.run(
+          streams[0],
+          streams[1],
+          app.create_initialization_options()
+      )
+  print("MCP server stopped.")
+
+if __name__ == "__main__":
+  asyncio.run(main())
+      </example>
+    </good-practice>
+
+    <bad-practice lang="python">
+      <description>Implementing custom socket communication for a local MCP server where stdio would be simpler.</description>
+      <example>
+# MCP Server Initialization
+from mcp import Server # Fictional import path
+import asyncio
+# import socket # Unnecessary custom socket for simple local server
+# import logging # Overkill if basic prints are fine
+
+# logger = logging.getLogger(__name__) # Complex logging setup
+# logger.setLevel(logging.INFO)
+# stream_handler = logging.StreamHandler() # Sending to a custom stream
+# logger.addHandler(stream_handler)
+
+async def main():
+  app = Server("example-local-py-server")
+
+  # logger.info("Attempting to start server with custom socket...")
+  print("Starting server with custom socket, stdio might be simpler.")
+  # ... custom socket server implementation ...
+  # This approach misses the simplicity and directness of stdio_server for local MCP.
+  # It requires manual handling of message framing, connection, etc.
+  await asyncio.sleep(10) # Placeholder for server logic
+  # logger.info("Server stopped.")
+  print("Server stopped.")
+
+if __name__ == "__main__":
+  asyncio.run(main())
+      </example>
+    </bad-practice>
+  </examples>
+
+  <critical-instructions>
+    <instruction>Prioritize stdio for local MCP server development unless specific, advanced transport features are essential.</instruction>
+    <instruction>Ensure logs from stdio-based servers are easily viewable in the console.</instruction>
+  </critical-instructions>
+</cursor-rule>
+
+
+
+
+
+
+
+
+
+
+
+
+

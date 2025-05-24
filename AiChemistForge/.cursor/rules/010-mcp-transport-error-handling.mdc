@@ -1,0 +1,293 @@
+---
+description: WHEN implementing MCP transport layers in Python or TypeScript THEN systematically handle potential errors (connection, parsing, protocol, timeouts, resource cleanup) TO create resilient and debuggable servers.
+globs:
+alwaysApply: false
+---
+---
+description: "WHEN implementing MCP transport layers in Python or TypeScript THEN systematically handle potential errors (connection, parsing, protocol, timeouts, resource cleanup) TO create resilient and debuggable servers."
+globs:
+  - "**/*.py"
+  - "**/*.ts"
+---
+<cursor-rule>
+  <version>1.0.0</version>
+  <context>
+    This rule outlines best practices for error handling within Model Context Protocol (MCP) transport implementations. Robust error handling is crucial for server stability, debugging, and providing informative feedback to clients. This is based on the guidance from [MCP Transports: Error Handling](mdc:httpscolonslashslashmodelcontextprotocol.iodocsslashconceptsslashstransports#error-handling).
+  </context>
+
+  <requirements>
+    <requirement>
+      <type>ComprehensiveHandling</type>
+      <guideline>Transport implementations MUST anticipate and handle various error scenarios including, but not limited to: connection errors, message parsing/serialization errors, MCP protocol errors, network timeouts, and errors during resource cleanup.</guideline>
+    </requirement>
+    <requirement>
+      <type>ClearFeedback</type>
+      <guideline>When an error occurs, the transport layer should, if possible, communicate an appropriate error message back to the MCP client or server core, following JSON-RPC error object conventions if applicable (code, message, data).</guideline>
+    </requirement>
+    <requirement>
+      <type>Logging</type>
+      <guideline>Log errors with sufficient detail (e.g., error type, message, relevant context like message ID or connection details) to aid in debugging. Use structured logging if appropriate for the project.</guideline>
+    </requirement>
+    <requirement>
+      <type>ResourceManagement</type>
+      <guideline>Ensure that resources (e.g., network connections, file handles, task groups) are properly cleaned up in `finally` blocks or using context managers (`with` statements in Python) to prevent leaks, especially in error paths.</guideline>
+    </requirement>
+    <requirement>
+      <type>GracefulFailure</type>
+      <guideline>Strive for graceful failure. An error in one part of the transport (e.g., handling a single malformed message) should not necessarily bring down the entire server unless the error is catastrophic.</guideline>
+    </requirement>
+  </requirements>
+
+  <examples>
+    <good-practice lang="typescript">
+      <description>Example of robust error handling in a TypeScript MCP transport component.</description>
+      <example>
+import { JSONRPCMessage } from "@mcp/core"; // Fictional import path
+
+interface Transport {
+  start(): Promise<void>;
+  send(message: JSONRPCMessage): Promise<void>;
+  close(): Promise<void>;
+  onclose?: () => void;
+  onerror?: (error: Error) => void;
+  onmessage?: (message: JSONRPCMessage) => void;
+}
+
+class ExampleReliableTransport implements Transport {
+  private connection: any; // Placeholder for actual connection object
+
+  onclose?: () => void;
+  onerror?: (error: Error) => void;
+  onmessage?: (message: JSONRPCMessage) => void;
+
+  async start(): Promise<void> {
+    try {
+      // Simulate connection logic
+      this.connection = { connected: true }; // Replace with actual connection setup
+      console.log("Transport started successfully.");
+      // Start listening for messages, etc.
+    } catch (error: any) {
+      const err = new Error(`Failed to connect transport: ${error.message}`);
+      this.onerror?.(err);
+      // console.error(err.message); // Also log locally
+      throw err; // Rethrow or handle as appropriate for the application
+    }
+  }
+
+  async send(message: JSONRPCMessage): Promise<void> {
+    if (!this.connection || !this.connection.connected) {
+      const err = new Error("Transport not connected. Cannot send message.");
+      this.onerror?.(err);
+      throw err;
+    }
+    try {
+      // Simulate sending logic
+      console.log(`Sending message: ${JSON.stringify(message).substring(0, 50)}...`);
+      // actualSendLogic(this.connection, message);
+    } catch (error: any) {
+      const err = new Error(`Failed to send message: ${error.message}`);
+      this.onerror?.(err);
+      // console.error(err.message); // Also log locally
+      throw err; // Rethrow or handle as appropriate
+    }
+  }
+
+  async close(): Promise<void> {
+    console.log("Closing transport...");
+    try {
+      if (this.connection) {
+        // Simulate closing connection
+        this.connection.connected = false;
+        // actualCloseLogic(this.connection);
+      }
+    } catch (error: any) {
+      const err = new Error(`Error during transport close: ${error.message}`);
+      this.onerror?.(err); // Notify about error during close
+      // console.error(err.message);
+    } finally {
+      this.connection = null;
+      this.onclose?.();
+      console.log("Transport closed.");
+    }
+  }
+}
+      </example>
+    </good-practice>
+
+    <bad-practice lang="typescript">
+      <description>Example of poor error handling in a TypeScript MCP transport.</description>
+      <example>
+import { JSONRPCMessage } from "@mcp/core"; // Fictional import path
+
+class UnreliableTransport {
+  // No onerror or onclose handlers
+  // No proper try-catch blocks for critical operations
+
+  async start(): Promise<void> {
+    // Potential error here not caught, could crash the server
+    // fakeConnectLogicThatMightFail();
+    console.log("Transport supposedly started.");
+  }
+
+  async send(message: JSONRPCMessage): Promise<void> {
+    // No check if connection is alive
+    // Potential error during serialization or sending not caught
+    // console.log(`Sending message: ${JSON.stringify(message)}`);
+    // fakeSendLogicThatMightFail(message);
+    console.log("Message supposedly sent.");
+  }
+
+  async close(): Promise<void> {
+    // Resources might not be cleaned up if an error occurs
+    // fakeCloseLogicThatMightFail();
+    console.log("Transport supposedly closed.");
+    // No call to onclose or similar notification
+  }
+}
+      </example>
+    </bad-practice>
+
+    <good-practice lang="python">
+      <description>Robust error handling in a Python MCP transport component using `anyio`.</description>
+      <example>
+import anyio
+import logging
+from contextlib import asynccontextmanager
+# from mcp import JSONRPCMessage # Fictional import
+
+logger = logging.getLogger(__name__)
+
+# Assuming JSONRPCMessage is a type alias or class
+from typing import TypeAlias, Any, AsyncGenerator, Tuple
+JSONRPCMessage: TypeAlias = Any # Placeholder
+
+@asynccontextmanager
+async def example_reliable_transport() -> AsyncGenerator[Tuple[anyio.abc.ObjectReceiveStream[JSONRPCMessage], anyio.abc.ObjectSendStream[JSONRPCMessage]], None]:
+    # Using memory streams for example, replace with actual I/O
+    send_to_client_stream, receive_from_client_stream = anyio.create_memory_object_stream[JSONRPCMessage](mdc:0)
+    send_to_server_stream, receive_from_server_stream = anyio.create_memory_object_stream[JSONRPCMessage](mdc:0)
+
+    async def process_incoming_messages():
+        try:
+            async with receive_from_client_stream:
+                async for message in receive_from_client_stream:
+                    logger.info(f"Received message: {str(message)[:50]}...")
+                    # Process message, potentially can raise error
+                    if "error" in str(message).lower(): # Simulate processing error
+                        raise ValueError("Simulated message processing error")
+                    await send_to_server_stream.send(message) # Forward to server logic
+        except* ValueError as eg: # Python 3.11+ specific ExceptionGroup for multiple errors
+            for exc in eg.exceptions:
+                logger.error(f"Message processing error: {exc}", exc_info=True)
+                # Potentially send error response back to client here
+        except anyio.EndOfStream:
+            logger.info("Client stream closed.")
+        except Exception as exc:
+            logger.error(f"Error in incoming message processing: {exc}", exc_info=True)
+            # Ensure client is aware or connection is closed cleanly
+        finally:
+            logger.info("Incoming message processor finished.")
+            await send_to_server_stream.aclose() # Close the stream towards the server
+
+    async def process_outgoing_messages():
+        try:
+            async with receive_from_server_stream:
+                async for message in receive_from_server_stream:
+                    logger.info(f"Sending message: {str(message)[:50]}...")
+                    # Actual send to client logic here
+                    await send_to_client_stream.send(message) # Echo back for this example
+        except anyio.EndOfStream:
+            logger.info("Server stream closed, no more messages to send to client.")
+        except Exception as exc:
+            logger.error(f"Error in outgoing message processing: {exc}", exc_info=True)
+        finally:
+            logger.info("Outgoing message processor finished.")
+            await send_to_client_stream.aclose() # Close the stream towards the client
+
+    try:
+        async with anyio.create_task_group() as tg:
+            logger.info("Example reliable transport started.")
+            tg.start_soon(process_incoming_messages)
+            tg.start_soon(process_outgoing_messages)
+            yield receive_from_server_stream, send_to_server_stream # Streams for MCP core to use
+    except Exception as exc:
+        logger.error(f"Fundamental transport error: {exc}", exc_info=True)
+        raise
+    finally:
+        # Ensure all resources are cleaned up
+        if not send_to_client_stream.is_closed():
+             await send_to_client_stream.aclose()
+        if not send_to_server_stream.is_closed():
+             await send_to_server_stream.aclose()
+        logger.info("Example reliable transport shut down.")
+
+async def use_transport():
+    try:
+        async with example_reliable_transport() as (read_stream, write_stream):
+            # Simulate server sending a message
+            await write_stream.send(JSONRPCMessage(id=1, method="hello", params={}))
+            # Simulate client sending a message that causes an error
+            # await read_stream.send(JSONRPCMessage(id=2, method="action", params={"error": True}))
+            # In a real scenario, read_stream would be populated by the transport
+            pass
+    except Exception as e:
+        logger.error(f"Application error using transport: {e}", exc_info=True)
+
+# To run this (Python 3.11+ for ExceptionGroup example):
+# import asyncio
+# logging.basicConfig(level=logging.INFO)
+# asyncio.run(use_transport())
+      </example>
+    </good-practice>
+
+    <bad-practice lang="python">
+      <description>Poor error handling in a Python MCP transport.</description>
+      <example>
+import asyncio
+
+# No specific logging, no context managers for resource safety
+async def handle_client_unsafe(reader, writer):
+    # Errors in stream operations or message handling are not caught
+    # This can lead to unhandled exceptions and abrupt termination
+    data = await reader.read(100) # Potential error if client disconnects
+    message = data.decode()
+    # print(f"Received: {message}")
+
+    # writer.write(data) # Potential error if client connection is lost
+    # await writer.drain()
+
+    # writer.close() # Should be in finally
+    # await writer.wait_closed() # Should be in finally
+    pass # Simplified for brevity
+
+async def main_unsafe():
+    # server = await asyncio.start_server(
+    #     handle_client_unsafe, '127.0.0.1', 8888) # Potential error during server start
+
+    # print(f'Serving on {server.sockets[0].getsockname()}')
+
+    # async with server:
+    #     await server.serve_forever() # Errors within serve_forever might not be handled gracefully
+    pass # Simplified
+
+# No try-except around main_unsafe() or within it for critical sections
+# asyncio.run(main_unsafe())
+      </example>
+    </bad-practice>
+  </examples>
+
+  <critical-instructions>
+    <instruction>ALWAYS implement try-catch/try-except blocks around I/O operations and message processing logic in transports.</instruction>
+    <instruction>ALWAYS ensure resources are cleaned up using `finally` or context managers, even when errors occur.</instruction>
+    <instruction>Log errors effectively to aid diagnostics.</instruction>
+  </critical-instructions>
+</cursor-rule>
+
+
+
+
+
+
+
+
+

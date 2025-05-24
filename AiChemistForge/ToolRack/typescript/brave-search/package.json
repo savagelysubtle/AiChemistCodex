@@ -1,0 +1,30 @@
+{
+  "name": "brave-search-mcp-server",
+  "version": "0.1.4",
+  "description": "MCP Server providing Brave Search tools.",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node -e \"process.stderr.write('TEST_STDERR_FROM_NPM_START\\n'); process.stdout.write('TEST_STDOUT_FROM_NPM_START\\n'); setTimeout(() => process.exit(0), 1000);\"",
+    "dev": "tsc --watch & node --watch dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "brave",
+    "search",
+    "toolshed"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.2"
+  }
+}
