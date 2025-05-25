@@ -1,0 +1,54 @@
+{
+  "_comment": "AiChemistForge MCP Server Configuration Template",
+  "_instructions": [
+    "1. Copy this file to your project's .cursor/mcp.json",
+    "2. Update the ABSOLUTE_PATH_TO_AICHEMISTFORGE to your actual path",
+    "3. Enable project-level MCP in Cursor settings",
+    "4. Restart Cursor"
+  ],
+
+  "mcpServers": {
+    "aichemistforge-server": {
+      "_comment": "Replace ABSOLUTE_PATH_TO_AICHEMISTFORGE with your actual path",
+
+      "_option1_batch_script": {
+        "command": "ABSOLUTE_PATH_TO_AICHEMISTFORGE\\ToolRack\\Python\\start_mcp_server.bat",
+        "cwd": "ABSOLUTE_PATH_TO_AICHEMISTFORGE\\ToolRack\\Python"
+      },
+
+      "_option2_direct_command": {
+        "command": "cmd",
+        "args": [
+          "/c",
+          "ABSOLUTE_PATH_TO_AICHEMISTFORGE\\ToolRack\\Python\\.venv\\Scripts\\uv.exe",
+          "run",
+          "python",
+          "-m",
+          "unified_mcp_server.main",
+          "--transport",
+          "stdio"
+        ],
+        "cwd": "ABSOLUTE_PATH_TO_AICHEMISTFORGE\\ToolRack\\Python",
+        "env": {
+          "PYTHONPATH": "src",
+          "LOG_LEVEL": "INFO"
+        }
+      },
+
+      "_current_recommended": "Use option1 (batch script) for easier setup",
+
+      "command": "ABSOLUTE_PATH_TO_AICHEMISTFORGE\\ToolRack\\Python\\start_mcp_server.bat",
+      "cwd": "ABSOLUTE_PATH_TO_AICHEMISTFORGE\\ToolRack\\Python",
+      "env": {
+        "LOG_LEVEL": "INFO"
+      }
+    }
+  },
+
+  "_notes": [
+    "Example path: D:\\Coding\\AiChemistCodex\\AiChemistForge",
+    "Make sure there are no spaces in the path",
+    "Use double backslashes (\\\\) in JSON",
+    "Available tools: query_cursor_database, file_tree, codebase_ingest"
+  ]
+}

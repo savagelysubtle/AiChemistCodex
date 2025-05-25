@@ -1,80 +1,29 @@
 """
 Shared utilities for the unified MCP server.
 
-This module contains utility functions and classes used across
-the server infrastructure and tools including exceptions, validation,
-security utilities, caching, and tool composition.
+This module contains essential utility functions and classes for:
+- Input validation
+- Security and path validation
+- Exception handling
+- Basic caching (if needed)
+
+The complex tool composition and registry systems have been removed
+in favor of direct FastMCP decorators.
 """
 
-from .caching import (
-    CacheEntry,
-    CacheManager,
-    MemoryCache,
-    cache_manager,
-    cached,
-    cached_delete,
-    # Convenience functions
-    cached_get,
-    cached_set,
-)
-from .composition import (
-    Composition,
-    CompositionMode,
-    CompositionResult,
-    CompositionStep,
-    ConditionalComposition,
-    ParallelComposition,
-    SequentialComposition,
-    ToolComposer,
-    # Utility functions
-    create_analysis_workflow,
-    create_cursor_analysis_workflow,
-    get_composer,
-    # Initialization functions
-    initialize_composer,
-    # Global instance
-    tool_composer,
-)
 from .exceptions import (
-    CacheError,
-    CacheInvalidationError,
-    CacheMissError,
     ConfigurationError,
-    DatabaseConnectionError,
-    DatabaseError,
-    DatabaseQueryError,
-    DirectoryNotFoundError,
-    FileNotFoundError,
-    FilesystemError,
     InputValidationError,
-    MetricsError,
-    MonitoringError,
     PathTraversalError,
-    PermissionError,
-    PromptError,
-    PromptExecutionError,
-    PromptNotFoundError,
-    ResourceAccessError,
-    ResourceError,
-    ResourceNotFoundError,
-    SchemaValidationError,
     SecurityError,
     ServerError,
-    SSETransportError,
-    StdioTransportError,
     ToolError,
     ToolExecutionError,
     ToolNotFoundError,
-    ToolRegistrationError,
     ToolValidationError,
-    TransportError,
     UnifiedMCPError,
     ValidationError,
-    path_traversal_detected,
-    prompt_not_found,
-    resource_not_found,
     # Convenience functions
-    tool_not_found,
     validation_failed,
 )
 from .security import (
@@ -82,38 +31,26 @@ from .security import (
     InputSanitizer,
     PathSecurity,
     SecureRandom,
-    URLSecurity,
-    generate_secure_token,
-    hash_password,
     input_sanitizer,
     # Global instances
     path_security,
     sanitize_input,
-    verify_password,
-)
-from .security import (
     # Convenience functions
-    validate_path as secure_validate_path,
+    validate_path,
 )
 from .validators import (
     BooleanValidator,
-    DictValidator,
     IntegerValidator,
-    JSONValidator,
-    ListValidator,
     PathValidator,
     StringValidator,
-    URLValidator,
     Validator,
     validate_boolean,
     validate_integer,
-    validate_json,
-    validate_list,
-    validate_path,
-    validate_schema,
     # Convenience functions
     validate_string,
-    validate_url,
+)
+from .validators import (
+    validate_path as validate_path_input,
 )
 
 __all__ = [
@@ -125,98 +62,28 @@ __all__ = [
     "ToolNotFoundError",
     "ToolExecutionError",
     "ToolValidationError",
-    "ToolRegistrationError",
-    "ResourceError",
-    "ResourceNotFoundError",
-    "ResourceAccessError",
-    "PromptError",
-    "PromptNotFoundError",
-    "PromptExecutionError",
     "SecurityError",
     "PathTraversalError",
     "ValidationError",
     "InputValidationError",
-    "SchemaValidationError",
-    "DatabaseError",
-    "DatabaseConnectionError",
-    "DatabaseQueryError",
-    "FilesystemError",
-    "FileNotFoundError",
-    "DirectoryNotFoundError",
-    "PermissionError",
-    "TransportError",
-    "StdioTransportError",
-    "SSETransportError",
-    "CacheError",
-    "CacheMissError",
-    "CacheInvalidationError",
-    "MetricsError",
-    "MonitoringError",
-    # Exception convenience functions
-    "tool_not_found",
-    "resource_not_found",
-    "prompt_not_found",
-    "path_traversal_detected",
     "validation_failed",
-    # Validators
-    "Validator",
-    "StringValidator",
-    "IntegerValidator",
-    "BooleanValidator",
-    "ListValidator",
-    "DictValidator",
-    "PathValidator",
-    "URLValidator",
-    "JSONValidator",
-    # Validation convenience functions
-    "validate_string",
-    "validate_integer",
-    "validate_boolean",
-    "validate_list",
-    "validate_path",
-    "validate_url",
-    "validate_json",
-    "validate_schema",
     # Security
     "PathSecurity",
     "InputSanitizer",
     "SecureRandom",
     "HashUtils",
-    "URLSecurity",
-    # Security global instances
     "path_security",
     "input_sanitizer",
-    # Security convenience functions
-    "secure_validate_path",
+    "validate_path",
     "sanitize_input",
-    "generate_secure_token",
-    "hash_password",
-    "verify_password",
-    # Caching
-    "CacheEntry",
-    "MemoryCache",
-    "CacheManager",
-    "cache_manager",
-    # Caching convenience functions
-    "cached_get",
-    "cached_set",
-    "cached_delete",
-    "cached",
-    # Tool Composition
-    "CompositionMode",
-    "CompositionStep",
-    "CompositionResult",
-    "ToolComposer",
-    "Composition",
-    "SequentialComposition",
-    "ParallelComposition",
-    "ConditionalComposition",
-    # Composition global instance
-    "tool_composer",
-    # Composition initialization
-    "initialize_composer",
-    "get_composer",
-    # Composition utilities
-    "create_analysis_workflow",
-    "create_cursor_analysis_workflow",
+    # Validators
+    "Validator",
+    "StringValidator",
+    "IntegerValidator",
+    "BooleanValidator",
+    "PathValidator",
+    "validate_string",
+    "validate_integer",
+    "validate_boolean",
+    "validate_path_input",
 ]

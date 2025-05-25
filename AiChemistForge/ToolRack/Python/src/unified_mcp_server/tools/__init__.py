@@ -1,17 +1,9 @@
 """
 Tool system for the unified MCP server.
 
-This module contains the tool implementations organized by type
-(database, filesystem, etc.) with a registry system for discovery.
+Tools are now implemented as @mcp.tool() decorated functions in main.py.
+FastMCP 2.0 handles all tool registration and management directly.
 """
 
-from .base import BaseTool, ToolError, ToolValidationError, ToolExecutionError
-from .registry import ToolRegistry
-
-__all__ = [
-    "BaseTool",
-    "ToolError",
-    "ToolValidationError",
-    "ToolExecutionError",
-    "ToolRegistry"
-]
+# No exports needed - tools are registered directly in main.py
+__all__ = []

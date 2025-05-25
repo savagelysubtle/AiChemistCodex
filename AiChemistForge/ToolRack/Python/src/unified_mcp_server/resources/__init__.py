@@ -1,13 +1,9 @@
 """
 MCP Resources for the unified server.
 
-This module contains resource implementations organized by category
-for exposing various data sources and endpoints.
+Resources are now implemented as @mcp.resource() decorated functions in main.py.
+Resources generate data directly without calling tools, following proper MCP patterns.
 """
 
-from .registry import resource_registry, ResourceRegistry
-
-__all__ = [
-    "resource_registry",
-    "ResourceRegistry"
-]
+# No exports needed - resources are defined in main.py
+__all__ = []

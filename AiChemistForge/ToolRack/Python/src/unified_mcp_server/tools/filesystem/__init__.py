@@ -1,14 +1,6 @@
 """Filesystem tools for the unified MCP server."""
 
-from .base import BaseFilesystemTool, FilesystemError, PathTraversalError
-from .codebase_ingest import CodebaseIngestTool
-from .file_tree import FileTreeTool
+# FastMCP 2.0 tools are registered directly in main.py
+# No exports needed here
 
-# Auto-discovery for tool registry
-__all__ = [
-    "BaseFilesystemTool",
-    "FilesystemError",
-    "PathTraversalError",
-    "FileTreeTool",
-    "CodebaseIngestTool",
-]
+__all__ = []

@@ -1,35 +1,48 @@
 """Server configuration management for the unified MCP server."""
 
 import os
-from typing import Optional, List
-from pathlib import Path
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from typing import List, Optional
+
+from pydantic import BaseModel, Field, field_validator
 
 
 class ServerConfig(BaseModel):
     """Configuration for the unified MCP server."""
 
-    model_config = ConfigDict(
-        env_file=".env",
-        case_sensitive=False,
-        extra="ignore"
-    )
+    class Config:
+        env_file = ".env"
+        case_sensitive = False
+        extra = "ignore"
 
     # Server Settings
-    server_name: str = Field(default="aichemistforge-mcp-server", description="MCP server name")
+    server_name: str = Field(
+        default="aichemistforge-mcp-server", description="MCP server name"
+    )
     log_level: str = Field(default="INFO", description="Logging level")
-    transport_type: str = Field(default="stdio", description="Transport type (stdio or sse)")
+    transport_type: str = Field(
+        default="stdio", description="Transport type (stdio or sse)"
+    )
 
     # Database Settings
-    cursor_path: Optional[str] = Field(default=None, description="Path to Cursor IDE directory")
-    project_directories: List[str] = Field(default_factory=list, description="Additional project directories")
+    cursor_path: Optional[str] = Field(
+        default=None, description="Path to Cursor IDE directory"
+    )
+    project_directories: List[str] = Field(
+        default_factory=list, description="Additional project directories"
+    )
 
     # File System Settings
-    allowed_paths: List[str] = Field(default_factory=list, description="Allowed file system paths")
-    max_file_size: int = Field(default=10_000_000, description="Maximum file size in bytes")
+    allowed_paths: List[str] = Field(
+        default_factory=list, description="Allowed file system paths"
+    )
+    max_file_size: int = Field(
+        default=10_000_000, description="Maximum file size in bytes"
+    )
 
     # Security Settings
-    enable_path_traversal_check: bool = Field(default=True, description="Enable path traversal protection")
+    enable_path_traversal_check: bool = Field(
+        default=True, description="Enable path traversal protection"
+    )
     max_query_results: int = Field(default=1000, description="Maximum query results")
 
     @field_validator("project_directories", mode="before")
@@ -64,7 +77,7 @@ def load_config() -> ServerConfig:
         "ALLOWED_PATHS": "allowed_paths",
         "MAX_FILE_SIZE": "max_file_size",
         "ENABLE_PATH_TRAVERSAL_CHECK": "enable_path_traversal_check",
-        "MAX_QUERY_RESULTS": "max_query_results"
+        "MAX_QUERY_RESULTS": "max_query_results",
     }
 
     for env_var, field_name in env_mapping.items():

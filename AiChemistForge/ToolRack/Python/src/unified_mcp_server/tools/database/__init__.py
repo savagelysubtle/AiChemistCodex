@@ -1,7 +1,6 @@
 """Database tools for the unified MCP server."""
 
-from .cursor_db import CursorDBTool
+# FastMCP 2.0 tools are registered directly in main.py
+# No exports needed here
 
-__all__ = [
-    "CursorDBTool"
-]
+__all__ = []

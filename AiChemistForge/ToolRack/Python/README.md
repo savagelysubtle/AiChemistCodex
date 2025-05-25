@@ -10,6 +10,7 @@ A comprehensive Model Context Protocol (MCP) server that provides organized tool
 - **Robust Error Handling**: Comprehensive error handling with detailed logging
 - **Extensible**: Easy to add new tools and categories
 - **Production Ready**: Proper configuration management and logging
+- **Cross-Project Compatible**: Easy setup for multiple projects
 
 ## Current Tools
 
@@ -18,6 +19,10 @@ A comprehensive Model Context Protocol (MCP) server that provides organized tool
   - List projects and workspaces
   - Query chat data and composer information
   - Access project-specific databases
+
+### Filesystem Tools
+- **file_tree**: Generate directory tree structures
+- **codebase_ingest**: Process entire codebases for LLM context
 
 ## Installation
 
@@ -29,13 +34,13 @@ A comprehensive Model Context Protocol (MCP) server that provides organized tool
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd ToolRack/Python/src/unified_mcp_server
+cd ToolRack/Python
 
 # Install dependencies
 uv sync --all-groups
 
 # Test the installation
-python test_server.py
+python test_mcp_server.py
 ```
 
 ## Usage
@@ -43,11 +48,56 @@ python test_server.py
 ### Running the Server
 ```bash
 # Run with default configuration
-uv run unified-mcp-server
+uv run python -m unified_mcp_server.main
 
-# Or run directly
-python -m unified_mcp_server.main
+# Or use the batch script (Windows)
+start_mcp_server.bat
 ```
+
+## Cross-Project Usage
+
+### For Other Projects to Connect to This Server
+
+#### Method 1: Global Configuration (Recommended)
+1. Add to **Cursor Settings > Features > Model Context Protocol**:
+```json
+{
+  "mcpServers": {
+    "aichemistforge-server": {
+      "command": "D:\\path\\to\\AiChemistForge\\ToolRack\\Python\\start_mcp_server.bat",
+      "cwd": "D:\\path\\to\\AiChemistForge\\ToolRack\\Python"
+    }
+  }
+}
+```
+
+#### Method 2: Project-Level Configuration
+1. **Enable project-level MCP** in Cursor settings
+2. Copy `mcp_config_template.json` to your project's `.cursor/mcp.json`
+3. Update the `ABSOLUTE_PATH_TO_AICHEMISTFORGE` placeholders
+4. Restart Cursor
+
+#### Method 3: Use the Template
+```bash
+# Copy template to your project
+cp ToolRack/Python/mcp_config_template.json /path/to/your/project/.cursor/mcp.json
+
+# Edit the file and replace ABSOLUTE_PATH_TO_AICHEMISTFORGE with:
+# D:\\Coding\\AiChemistCodex\\AiChemistForge
+```
+
+### Important Notes for Cross-Project Setup
+- **Absolute paths required** - Cursor doesn't support relative paths well
+- **Enable project MCP** - Must be enabled in Cursor settings
+- **No spaces in paths** - Avoid paths with spaces for best compatibility
+- **Double backslashes** - Use `\\\\` in JSON configurations
+- **Tool limit** - Cursor supports max 40 tools simultaneously
+
+### Available Tools After Connection
+- `query_cursor_database` - Access Cursor project databases
+- `file_tree` - Generate directory structures
+- `codebase_ingest` - Process codebases for AI context
+- `manage_plugins` - Plugin management (when available)
 
 ### Configuration
 The server can be configured via environment variables:
@@ -67,27 +117,20 @@ export MAX_FILE_SIZE="20000000"  # 20MB
 export MAX_QUERY_RESULTS="2000"
 ```
 
-### Using with MCP Clients
+### Troubleshooting Cross-Project Issues
+See `.cursor/mcp_troubleshooting.md` for comprehensive Windows 11 troubleshooting guide.
 
-The server implements the standard MCP protocol and can be used with any MCP-compatible client:
-
-```json
-{
-  "mcpServers": {
-    "aichemistforge": {
-      "command": "uv",
-      "args": ["run", "unified-mcp-server"],
-      "cwd": "/path/to/unified_mcp_server"
-    }
-  }
-}
-```
+Common issues:
+- **"Client Closed" errors**: Use `cmd /c` wrapper or batch script
+- **Path not found**: Ensure absolute paths and no spaces
+- **Tools not visible**: Enable project-level MCP in settings
+- **Server timeout**: Check Windows command execution format
 
 ## Development
 
 ### Project Structure
 ```
-src/unified_mcp_server/
+Python/src/unified_mcp_server/
 ├── server/              # Core server infrastructure
 │   ├── config.py       # Configuration management
 │   ├── logging.py      # Logging setup
