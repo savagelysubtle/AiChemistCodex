@@ -1,20 +1,19 @@
 {
   "mcpServers": {
     "unified-mcp-server": {
-      "command": "D:\\Coding\\AiChemistCodex\\AiChemistForge\\ToolRack\\Python\\src\\unified_mcp_server\\.venv\\Scripts\\uv.exe",
-      "type": "stdio",
+      "command": "D:\\Coding\\AiChemistCodex\\AiChemistForge\\ToolRack\\Python\\.venv\\Scripts\\uv.exe",
       "args": [
         "run",
-        "--with",
-        "mcp[cli]",
-        "mcp",
-        "run",
-        "D:\\Coding\\AiChemistCodex\\AiChemistForge\\ToolRack\\Python\\src\\unified_mcp_server\\main.py"
+        "python",
+        "-m",
+        "unified_mcp_server.main",
+        "--transport",
+        "stdio"
       ],
-      "cwd": "D:\\Coding\\AiChemistCodex\\AiChemistForge\\ToolRack\\Python\\src\\unified_mcp_server",
+      "cwd": "D:\\Coding\\AiChemistCodex\\AiChemistForge\\ToolRack\\Python",
       "env": {
         "PYTHONPATH": "src",
-        "LOG_LEVEL": "INFO"
+        "LOG_LEVEL": "DEBUG"
       }
     }
   }

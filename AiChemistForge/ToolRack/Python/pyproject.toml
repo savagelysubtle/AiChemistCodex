@@ -10,6 +10,8 @@ dependencies = [
     "pydantic>=2.0.0",
     "pathlib>=1.0.1",
     "typing>=3.7.4.3",
+    "python-dotenv>=1.1.0",
+    "uv>=0.7.8",
 ]
 description = "AiChemistForge - Unified MCP Server with organized tools"
 license = { text = "MIT" }
@@ -44,3 +46,16 @@ target-version = "py313"
 [tool.mypy]
 python_version = "3.13"
 strict         = true
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+]
+
+[tool.pytest.ini_options]
+addopts                            = "-ra -q"
+asyncio_default_fixture_loop_scope = "function"
+asyncio_mode                       = "auto"
+minversion                         = "7.0"
+testpaths                          = [ "tests" ]

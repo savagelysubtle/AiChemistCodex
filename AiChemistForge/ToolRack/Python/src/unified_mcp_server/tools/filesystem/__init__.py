@@ -1,6 +1,14 @@
 """Filesystem tools for the unified MCP server."""
 
-# Filesystem tools will be implemented here
-# Placeholder for auto-discovery
+from .base import BaseFilesystemTool, FilesystemError, PathTraversalError
+from .codebase_ingest import CodebaseIngestTool
+from .file_tree import FileTreeTool
 
-__all__ = []
+# Auto-discovery for tool registry
+__all__ = [
+    "BaseFilesystemTool",
+    "FilesystemError",
+    "PathTraversalError",
+    "FileTreeTool",
+    "CodebaseIngestTool",
+]

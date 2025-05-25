@@ -3,15 +3,17 @@
 import argparse
 import signal
 import sys
-from pathlib import Path
 
 from .server.config import config
 from .server.logging import setup_logging
-from .server.app import fastmcp_app
+
+# Use lazy import to avoid circular dependency
+# from .server.app import fastmcp_app
 
 
 def setup_signal_handlers() -> None:
     """Setup signal handlers for graceful shutdown."""
+
     def signal_handler(signum: int, frame) -> None:
         """Handle shutdown signals."""
         logger = setup_logging("main", config.log_level)
@@ -23,21 +25,16 @@ def setup_signal_handlers() -> None:
     signal.signal(signal.SIGTERM, signal_handler)
 
 
-def main() -> None:
+def main() -> int:
     """Main entry point for the MCP server."""
     parser = argparse.ArgumentParser(description="AiChemistForge MCP Server")
     parser.add_argument(
         "--transport",
         choices=["stdio", "sse"],
         default=config.transport_type,
-        help="Transport type to use"
+        help="Transport type to use",
     )
-    parser.add_argument(
-        "--port",
-        type=int,
-        default=8000,
-        help="Port for SSE transport"
-    )
+    parser.add_argument("--port", type=int, default=8000, help="Port for SSE transport")
     parser.add_argument("--version", action="version", version="1.0.0")
 
     args = parser.parse_args()
@@ -49,7 +46,7 @@ def main() -> None:
     setup_signal_handlers()
 
     # Log configuration
-    logger.info(f"Server configuration:")
+    logger.info("Server configuration:")
     logger.info(f"  - Server name: {config.server_name}")
     logger.info(f"  - Transport: {args.transport}")
     logger.info(f"  - Log level: {config.log_level}")
@@ -58,7 +55,10 @@ def main() -> None:
 
     try:
         if args.transport == "stdio":
-            # Run FastMCP with stdio transport
+            # Import and run FastMCP with stdio transport
+            from .server import get_fastmcp_app
+
+            fastmcp_app = get_fastmcp_app()
             fastmcp_app.run()
         else:
             logger.error("SSE transport not yet implemented")
@@ -77,6 +77,7 @@ def dev_main() -> None:
     """Development entry point with additional debugging."""
     # Enable more verbose logging for development
     import os
+
     os.environ["MCP_LOG_LEVEL"] = "DEBUG"
 
     logger = setup_logging("dev", "DEBUG")

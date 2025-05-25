@@ -1,0 +1,19 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# IMPORTANT:
+
+# Always read @airesearchagentcontext.mdc before writing any code.
+
+# Located ${workspace}/.cursor/${workspace}.md
+
+# After adding a major feature or completing a milestone, update ${workspace}.md
+
+# Document the entire database schema in ${workspace}.md
+
+# For new migrations, make sure to add them to the same file.
+
+
+

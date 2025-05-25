@@ -1,0 +1,200 @@
+---
+description: CRITICAL ALWAYS put rules in the proper test suite folder
+globs:
+alwaysApply: false
+---
+# Python Test Organization Standards
+
+This rule defines comprehensive test organization and writing standards for Python projects, using nested JSON formatting for clarity and consistency.
+
+## Test Organization Structure
+
+```json
+{
+  "test_standards": {
+    "directory_structure": {
+      "primary_location": "tests/",
+      "description": "All tests MUST be placed in the dedicated tests/ directory at project root level",
+      "structure": {
+        "unit_tests": "tests/unit/",
+        "integration_tests": "tests/integration/",
+        "functional_tests": "tests/functional/",
+        "performance_tests": "tests/performance/",
+        "fixtures": "tests/fixtures/",
+        "conftest": "tests/conftest.py"
+      },
+      "naming_conventions": {
+        "test_files": "test_{module_name}.py",
+        "test_classes": "Test{ClassName}",
+        "test_methods": "test_{functionality_description}",
+        "examples": [
+          "test_filesystem_tools.py",
+          "test_registry.py",
+          "test_server.py"
+        ]
+      }
+    },
+    "file_organization": {
+      "structure_mapping": {
+        "principle": "Mirror source code structure in tests/",
+        "example": {
+          "source": "src/unified_mcp_server/tools/registry.py",
+          "test": "tests/test_registry.py OR tests/tools/test_registry.py"
+        }
+      },
+      "required_files": {
+        "__init__.py": {
+          "location": "tests/__init__.py",
+          "purpose": "Make tests directory a Python package",
+          "content": "Empty file or package-level test configuration"
+        },
+        "conftest.py": {
+          "location": "tests/conftest.py",
+          "purpose": "Shared pytest fixtures and configuration",
+          "scope": "Available to all test files"
+        }
+      }
+    },
+    "test_writing_standards": {
+      "framework": {
+        "primary": "pytest",
+        "async_support": "pytest-asyncio for async testing",
+        "coverage": "pytest-cov for coverage reporting"
+      },
+      "test_structure": {
+        "aaa_pattern": {
+          "arrange": "Set up test data and mocks",
+          "act": "Execute the code being tested",
+          "assert": "Verify expected outcomes"
+        },
+        "function_naming": {
+          "descriptive": "test_should_return_error_when_file_not_found",
+          "avoid": "test_function1, test_case_a"
+        }
+      },
+      "async_testing": {
+        "decorator": "@pytest.mark.asyncio",
+        "pattern": "async def test_async_functionality()",
+        "execution": "Use asyncio.run() or pytest-asyncio"
+      }
+    },
+    "test_categories": {
+      "unit_tests": {
+        "purpose": "Test individual functions/methods in isolation",
+        "location": "tests/unit/ OR tests/test_{module}.py",
+        "characteristics": [
+          "Fast execution (< 100ms per test)",
+          "No external dependencies",
+          "Use mocks for dependencies"
+        ]
+      },
+      "integration_tests": {
+        "purpose": "Test interactions between components",
+        "location": "tests/integration/",
+        "characteristics": [
+          "Test real component interactions",
+          "May use databases/external services",
+          "Slower execution acceptable"
+        ]
+      },
+      "functional_tests": {
+        "purpose": "Test complete workflows and user scenarios",
+        "location": "tests/functional/",
+        "characteristics": [
+          "End-to-end testing",
+          "Test from user perspective",
+          "May be slowest test category"
+        ]
+      }
+    },
+    "test_execution": {
+      "commands": {
+        "run_all": "pytest tests/",
+        "run_specific": "pytest tests/test_registry.py",
+        "run_with_coverage": "pytest tests/ --cov=src --cov-report=html",
+        "run_async": "pytest tests/ -v --asyncio-mode=auto"
+      },
+      "markers": {
+        "slow": "@pytest.mark.slow",
+        "integration": "@pytest.mark.integration",
+        "unit": "@pytest.mark.unit",
+        "asyncio": "@pytest.mark.asyncio"
+      }
+    },
+    "test_data_management": {
+      "fixtures": {
+        "location": "tests/fixtures/",
+        "purpose": "Reusable test data and setup",
+        "types": [
+          "Data files (.json, .txt, .csv)",
+          "Mock objects and responses",
+          "Database fixtures"
+        ]
+      },
+      "parametrization": {
+        "use_case": "Test multiple input scenarios",
+        "decorator": "@pytest.mark.parametrize",
+        "example": "@pytest.mark.parametrize('input,expected', [(1, 2), (2, 4)])"
+      }
+    },
+    "quality_standards": {
+      "coverage": {
+        "minimum_target": "80% line coverage",
+        "critical_paths": "100% coverage for critical business logic",
+        "reporting": "Generate HTML coverage reports"
+      },
+      "documentation": {
+        "test_docstrings": "Required for complex test scenarios",
+        "test_comments": "Explain non-obvious test logic",
+        "readme": "Document test execution and organization in tests/README.md"
+      },
+      "maintenance": {
+        "cleanup": "Use pytest fixtures for setup/teardown",
+        "isolation": "Each test should be independent",
+        "deterministic": "Tests should produce consistent results"
+      }
+    },
+    "mcp_specific_testing": {
+      "server_testing": {
+        "stdio_transport": "Test MCP servers with stdio transport",
+        "tool_testing": "Individual tool testing via ToolRegistry",
+        "integration": "Full server initialization and tool discovery"
+      },
+      "async_patterns": {
+        "tool_execution": "Use safe_execute() for tool testing",
+        "registry_init": "await registry.initialize_tools()",
+        "cleanup": "Proper resource cleanup in async tests"
+      }
+    }
+  }
+}
+```
+
+## Implementation Guidelines
+
+### CRITICAL RULES:
+1. **NEVER place tests outside the tests/ directory**
+2. **ALWAYS mirror source structure in test organization**
+3. **ALWAYS use descriptive test names that explain the scenario**
+4. **ALWAYS write both positive and negative test cases**
+5. **ALWAYS clean up resources in test teardown**
+
+### Quick Reference:
+- Test file naming: `test_{module_name}.py`
+- Test function naming: `test_{what_it_tests}_{expected_outcome}`
+- Async tests: Use `@pytest.mark.asyncio` decorator
+- Coverage: Aim for 80%+ coverage on all new code
+- Execution: `pytest tests/` for all tests
+
+### Examples from Current Codebase:
+- ✅ `tests/test_filesystem_tools.py` - Tests filesystem tool functionality
+- ✅ `tests/test_registry.py` - Tests tool registry initialization
+- ✅ `tests/test_server.py` - Tests MCP server functionality
+
+### Integration with Project Standards:
+- Use `uv` for managing test dependencies
+- Format test files with `ruff`
+- Type hint test functions where beneficial
+- Follow security standards (no hardcoded test credentials)
+
+

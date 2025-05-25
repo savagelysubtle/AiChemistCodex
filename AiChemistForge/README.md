@@ -1,57 +1,139 @@
-# 🛠️ AiChemist Forge: A Workspace for MCP Development
+# 🧪 AiChemist Forge
 
-Welcome to the MCP ToolShed, a collection of resources, tools, SDKs, and configurations focused on building and interacting with Model Context Protocol (MCP) servers. This workspace serves as a development environment and reference hub for various MCP-related projects.
+A unified workspace for developing Model Context Protocol (MCP) servers with organized tooling for AI development workflows.
+
+## 🏗️ Architecture
+
+This workspace provides a clean, unified approach to MCP server development with separate implementations for different runtime environments:
+
+- **Python Servers** (`ToolRack/Python/`) - Unified Python MCP server with organized tools
+- **TypeScript Servers** (`ToolRack/typescript/`) - TypeScript/Node.js MCP implementations
+- **Planning & Documentation** (`Plans/`, `Compendium/`) - Architecture plans and guides
+
+## 🚀 Quick Start
+
+### Python Unified MCP Server
+```bash
+cd ToolRack/Python
+uv sync --all-groups
+uv run unified-mcp-server
+```
+
+### Development
+```bash
+# Test the Python server
+cd ToolRack/Python
+python test_server.py
+
+# View detailed architecture plans
+cat Plans/Python/unified_mcp_server_refactor.md
+```
 
 ## 📁 Workspace Structure
 
-The workspace is organized into several key directories:
+```
+AiChemistForge/
+├── ToolRack/                    # Production MCP servers
+│   ├── Python/                  # Unified Python MCP server
+│   │   ├── src/unified_mcp_server/  # Server implementation
+│   │   ├── pyproject.toml       # Python dependencies & config
+│   │   └── README.md            # Python server documentation
+│   └── typescript/              # TypeScript MCP implementations
+├── Plans/                       # Architecture & implementation plans
+│   └── Python/                  # Python server planning docs
+├── Compendium/                  # Documentation & guides
+├── .cursor/                     # Workspace documentation & rules
+└── README.md                    # This file
+```
 
-*   **`Compendium/`**: A collection of documentation, guides, SDK information, and manuals for the tools and concepts used within this workspace. Think of this as the library or reference section.
-*   **`ToolRack/`**: Holds the actual implementations of various MCP tools. These are standalone servers providing specific functionalities (e.g., Brave Search integration, local file system access). These are the ready-to-use tools built with the SDKs from the `ToolBox`.
-*   **`.vscode/`, `.cursor/`, `.roo/`**: IDE-specific configuration and metadata files.
-*   **`.gitignore`, `.env.local`**: Standard Git ignore file and local environment variable configuration.
+## 🛠️ Available Tools
 
-## 🚀 Getting Started
+### Python Unified Server
+**Status: 85% Complete (Phase 3 of 5)**
 
-2.  **Examine the `ToolRack/`**: Look at the existing tool implementations for examples of how to use the SDKs and structure MCP servers. Each tool should have its own `README.md` explaining its function, setup, and usage.
-3.  **Consult the `Compendium/`**: Refer to the documentation here for SDK details, tool guides, and general MCP concepts.
-4.  **Set up Environment**: Many tools and SDKs require specific environment variables (like API keys). Ensure you have a `.env.local` file at the root or configure environment variables as required by individual components. Follow setup instructions within each tool/SDK directory. For Python projects, note the preference for using `uv` as per the `801-python-environment` rule.
+- ✅ **Database Tools**: Cursor IDE state management, project queries
+- ✅ **Resources**: Cursor project discovery and data access
+- ✅ **Prompts**: Analysis prompts for project exploration
+- 🚧 **Filesystem Tools**: Local file operations (Phase 4 - in progress)
+- 📋 **Advanced Features**: Planned for Phase 5
 
-## 🧭 Available Tools (in the `ToolRack/`)
+### Tool Categories
+- **Database** (`tools/database/`): Database query and management tools
+- **Filesystem** (`tools/filesystem/`): Secure file system operations
+- **Analysis** (`prompts/analysis/`): AI-powered analysis prompts
+- **Resources** (`resources/cursor/`): Structured data access
 
-This section provides a quick overview of the MCP tools currently available in the `ToolRack/`. See the respective `README.md` files within each tool's directory for full details.
+## 🔧 Configuration
 
-*   **Brave Search (`brave-search`)**
-    *   **Language:** TypeScript (likely, based on `Compendium/brave-search/README.md`)
-    *   **Description:** Provides MCP tools (`brave_web_search`, `brave_local_search`) to interact with the Brave Search API.
-    *   **Location:** `ToolRack/brave-search/` *(Assuming it mirrors Compendium)*
-*   **Cursor MCP Installer (`cursor-mcp-installer`)**
-    *   **Language:** TypeScript (Node.js/`mjs`)
-    *   **Description:** An MCP tool to help install and manage other MCP servers within the Cursor IDE environment.
-    *   **Location:** `ToolRack/cursor-mcp-installer/` *(Assuming it mirrors Compendium)*
-*   **Local File Inspector (`local-file-ingest`)**
-    *   **Language:** Python
-    *   **Description:** An MCP server allowing inspection of local files and directories (listing, reading).
-    *   **Key Features:** Directory tree view, file reading, secure path handling.
-    *   **Package Name:** `mcp-local-file-inspector`
-    *   **Location:** `ToolRack/local-file-ingest/`
-*   **Windows CLI Tool (`win-cli-tool`)**
-    *   **Language:** TypeScript (likely)
-    *   **Description:** (Assumed based on name) An MCP tool for executing Windows command-line operations.
-    *   **Location:** `ToolRack/win-cli-tool/`
-*   **Web Crawler (`web-crawler`)**
-     *   **Language:** (Unknown from structure)
-     *   **Description:** (Assumed based on name) An MCP tool for crawling web pages.
-     *   **Location:** `ToolRack/web-crawler/`
+### Environment Variables
+```bash
+# Server Configuration
+export MCP_SERVER_NAME="aichemist-forge"
+export MCP_LOG_LEVEL="INFO"
+export MCP_TRANSPORT_TYPE="stdio"
 
+# Tool-Specific Settings
+export CURSOR_PATH="/path/to/cursor"
+export PROJECT_DIRS="/path/to/projects"
+export MAX_FILE_SIZE="20000000"
+```
 
-*(Note: Details for some tools are inferred from directory names. Please update with accurate information.)*
+### MCP Client Configuration
+```json
+{
+  "mcpServers": {
+    "aichemist-forge": {
+      "command": "uv",
+      "args": ["run", "unified-mcp-server"],
+      "cwd": "./ToolRack/Python"
+    }
+  }
+}
+```
+
+## 📈 Development Status
+
+**Current Phase**: Phase 4 - Filesystem Tools Implementation
+
+- **Phase 1**: ✅ Infrastructure Setup (100% Complete)
+- **Phase 2**: ✅ Tool Organization System (100% Complete)
+- **Phase 3**: ✅ Cursor Database Tools (100% Complete)
+- **Phase 4**: 🚧 Filesystem Tools (In Progress)
+- **Phase 5**: 📋 Advanced Features (Planned)
+
+**Latest Test Results:**
+- ✅ 1 tool discovered (cursor_db)
+- ✅ 1 resource discovered (cursor://projects)
+- ✅ 3 prompts discovered (analysis prompts)
+- ✅ 87 Cursor projects found and accessible
+
+## 🏛️ Architecture Principles
+
+- **Unified Structure**: Single server per runtime with organized tools
+- **Type Safety**: Comprehensive type hints and validation
+- **Security First**: Environment-based secrets, input validation
+- **Extensibility**: Plugin-style tool registration
+- **Maintainability**: Clear separation of concerns
+
+## 📚 Documentation
+
+- **Server Implementation**: [`ToolRack/Python/README.md`](ToolRack/Python/README.md)
+- **Architecture Plan**: [`Plans/Python/unified_mcp_server_refactor.md`](Plans/Python/unified_mcp_server_refactor.md)
+- **Implementation Guide**: [`Plans/Python/implementation_guide.md`](Plans/Python/implementation_guide.md)
+- **Progress Tracking**: [`.cursor/AiChemistForge.md`](.cursor/AiChemistForge.md)
 
 ## 🤝 Contributing
 
-*(Placeholder: Add guidelines here if collaboration is expected. E.g., coding standards, pull request process, issue tracking.)*
+1. **Understand Context**: Review architecture plans in `Plans/`
+2. **Follow Standards**: Use UV package manager, Ruff formatting, type hints
+3. **Security**: Never hard-code secrets, validate all inputs
+4. **Testing**: Test changes thoroughly before committing
+5. **Documentation**: Update relevant docs with changes
 
-## 📜 License
+## 📝 License
 
-*(Placeholder: Specify the license for the overall workspace or note that individual components may have their own licenses.)*
+MIT License - Individual components may have specific licensing terms.
 
+---
+
+**Project Status**: Active Development | **Architecture**: Unified Servers | **Runtime**: Python 3.13+ & TypeScript

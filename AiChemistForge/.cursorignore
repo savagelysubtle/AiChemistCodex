@@ -1,6 +1,4 @@
-# Dependencies and Virtual Environments
-node_modules/
-.venv/
+
 
 # Build output / Compiled files
 dist/

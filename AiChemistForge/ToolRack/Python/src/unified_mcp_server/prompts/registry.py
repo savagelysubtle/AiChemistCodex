@@ -1,12 +1,11 @@
 """Prompt registry for dynamic prompt discovery and management."""
 
-from typing import Dict, List, Optional, Any, Callable, Awaitable
 import importlib
 import pkgutil
+from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from ..server.config import config
 from ..server.logging import setup_logging
-
 
 logger = setup_logging(__name__, config.log_level)
 
@@ -23,7 +22,7 @@ class PromptRegistry:
         self,
         name: str,
         handler: Callable[..., Awaitable[Dict[str, Any]]],
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Register a prompt handler.
 
@@ -42,7 +41,9 @@ class PromptRegistry:
         self._prompt_metadata[name] = metadata or {}
         self.logger.debug(f"Registered prompt: {name}")
 
-    def get_prompt_handler(self, name: str) -> Optional[Callable[..., Awaitable[Dict[str, Any]]]]:
+    def get_prompt_handler(
+        self, name: str
+    ) -> Optional[Callable[..., Awaitable[Dict[str, Any]]]]:
         """Get a prompt handler by name.
 
         Args:
@@ -91,6 +92,7 @@ class PromptRegistry:
 
         # Discover and load prompts from different categories
         await self._discover_prompts_in_category("analysis")
+        await self._discover_prompts_in_category("filesystem")
 
         self.logger.info(f"Initialized {len(self._prompts)} prompts")
 
@@ -105,7 +107,7 @@ class PromptRegistry:
             category_module = importlib.import_module(category_path)
 
             # Get the package path for the category
-            if hasattr(category_module, '__path__'):
+            if hasattr(category_module, "__path__"):
                 package_path = category_module.__path__
             else:
                 self.logger.warning(f"Category {category} is not a package")
@@ -123,15 +125,21 @@ class PromptRegistry:
                     module = importlib.import_module(full_module_name)
 
                     # Look for prompt registration function
-                    if hasattr(module, 'register_prompts'):
+                    if hasattr(module, "register_prompts"):
                         try:
                             await module.register_prompts(self)
-                            self.logger.debug(f"Registered prompts from {full_module_name}")
+                            self.logger.debug(
+                                f"Registered prompts from {full_module_name}"
+                            )
                         except Exception as e:
-                            self.logger.error(f"Failed to register prompts from {module_name}: {e}")
+                            self.logger.error(
+                                f"Failed to register prompts from {module_name}: {e}"
+                            )
 
                 except Exception as e:
-                    self.logger.error(f"Failed to import module {full_module_name}: {e}")
+                    self.logger.error(
+                        f"Failed to import module {full_module_name}: {e}"
+                    )
 
         except ImportError as e:
             self.logger.warning(f"Category {category} not found or import error: {e}")
