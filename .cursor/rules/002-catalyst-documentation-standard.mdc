@@ -1,0 +1,327 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+<cursor-rule>
+  <version>0.1.0</version>
+  <name>CatalystDocumentationStandard</name>
+  <context>
+    This rule defines the "Catalyst Documentation Standard," a comprehensive format for project and component-level README files and primary overview documents.
+    Its purpose is to ensure documentation is immediately useful for both human developers and AI agents, facilitating rapid understanding, setup, contribution, and integration.
+    This standard emphasizes clarity of purpose ("the why"), actionable steps ("the how"), structured data for AI parsing, and explicit articulation of often-missed contextual information.
+    It aims to transform READMEs from simple instruction lists into rich, self-contained onboarding and reference guides.
+  </context>
+
+  <principles>
+    <principle id="P01">Clarity of Purpose: Articulate the specific problem solved and the unique value proposition, enabling users to quickly assess relevance.</principle>
+    <principle id="P02">Rapid Onboarding: Design for "Zero to Productive" in minutes, providing a clear, minimal path to a working state.</principle>
+    <principle id="P03">Actionable Guidance: Include concrete, runnable commands, illustrative examples, and unambiguous instructions.</principle>
+    <principle id="P04">AI Navigability: Structure key information (configurations, tool lists, APIs) in a way that is easily parsable and understandable by AI agents, facilitating automated analysis and interaction.</principle>
+    <principle id="P05">Developer Empathy: Anticipate common questions, challenges, and information needs of new developers, contributors, and integrators.</principle>
+    <principle id="P06">Contextual Richness: Provide insights into architectural decisions, operational considerations, and integration patterns.</principle>
+    <principle id="P07">Iterative Improvement: Both the standard itself and documents following it are expected to evolve. Feedback and proactive enhancements are encouraged.</principle>
+  </principles>
+
+  <ai-augmentation-directive>
+    <guideline>
+      AI agents (like Gemini) assisting with documentation under this standard are GRANTED FULL FREEDOM to populate, structure, and refine the content. This includes proactively identifying and filling information gaps based on the component's codebase, associated files, and the AI's general knowledge of best practices. The objective is to create the most effective, comprehensive, and easily digestible documentation possible.
+    </guideline>
+    <guideline>
+      AI agents should explicitly state (e.g., in a footer of the README) that the document adheres to or aspires to the Catalyst Documentation Standard and that AI contributions are integral to its creation and maintenance. This signals the document's nature and encourages collaborative improvement.
+    </guideline>
+    <guideline>
+      AI agents are encouraged to suggest improvements to the Catalyst Documentation Standard itself based on their experience applying it, noting any ambiguities, missing elements, or areas for enhanced clarity.
+    </guideline>
+    <guideline>
+      When generating content, AI agents should prioritize accuracy, conciseness where appropriate, and the inclusion of details that are commonly overlooked but critical for understanding (e.g., environment assumptions, rationale for key dependencies).
+    </guideline>
+  </ai-augmentation-directive>
+
+  <documentation-structure name="CatalystREADME">
+    <description>
+      The following sections constitute the Catalyst Documentation Standard. While all sections are recommended for comprehensive documentation, their depth and specific content will vary based on the project/component's complexity and nature.
+      The primary format is Markdown. Within Markdown, use structured data formats (e.g., YAML blocks, JSON snippets, or well-defined tables) for lists of tools, configurations, or API parameters to enhance AI parsability and human scannability.
+    </description>
+
+    <section id="CRS01" name="Header & Metadata Block">
+      <item order="1">**Project/Component Name (H1)**: Clear and descriptive.</item>
+      <item order="2">**One-Liner (Bold)**: An ultra-concise (tweet-length) summary of what it is and its primary benefit.</item>
+      <item order="3">**Version**: Current stable or development version (e.g., `v1.2.3`, `0.1.0-alpha`).</item>
+      <item order="4">**Status**: Current development status (e.g., `Experimental`, `Alpha`, `Beta`, `Production`, `Deprecated`).</item>
+      <item order="5">**AI Agent Quick-Parse ID (Optional but Recommended)**: A unique, machine-parsable identifier. Format: `[ORG_OR_NAMESPACE]::[PROJECT_NAME]::[COMPONENT_NAME_IF_SUB]::[VERSION_TAG]` (e.g., `AICHEMIST_FORGE::PYTHON_MCP_SERVER::V_0_2_1`).</item>
+      <item order="6">**Badges (Optional)**: Build status, coverage, license, etc. (e.g., Shields.io).</item>
+      <item order="7">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS02" name="Spark ✨: Purpose & Value (H2)">
+      <description>Clearly articulate why this component exists and its value.</description>
+      <subsection name="Problem Solved">Describe the specific pain point or challenge this component addresses.</subsection>
+      <subsection name="Unique Value Proposition (UVP)">What makes this component different, better, or particularly suited for certain tasks/users compared to alternatives?</subsection>
+      <subsection name="Target Audience(s)">Identify primary users (e.g., Application Developers, Data Scientists, Platform Engineers, other AI Agents, specific teams).</subsection>
+      <subsection name="Core Use Cases (Illustrated)">Provide 2-4 brief, concrete examples of how this component is intended to be used to achieve a specific outcome.</subsection>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS03" name="Ignition 🔥: 5-Minute Quick Start (H2)">
+      <description>The absolute minimum steps to get a basic instance running and see a tangible result.</description>
+      <item order="1">**Goal**: Clearly state what the user will achieve (e.g., "Run the server and get a successful health check response.").</item>
+      <item order="2">**Prerequisites (Minimal)**: List essential tools/runtimes with versions (e.g., `Node.js v18+`, `Python 3.10+ with pip`, `Docker Engine v20+`). Mention critical API keys only if unavoidable for a basic run, and suggest dummy values for local testing.</item>
+      <item order="3">**Clone/Obtain (If Standalone)**: Brief instructions if the component needs to be cloned separately.
+        ```bash
+        # Example
+        # git clone [repository_url]
+        # cd [path_to_component]
+        ```
+      </item>
+      <item order="4">**Install Minimal Dependencies**: The command(s) to install only what's needed for the quick start.
+        ```bash
+        # Example: npm install --omit=dev OR uv pip install -r requirements-minimal.txt
+        ```
+      </item>
+      <item order="5">**Minimal Configuration (Crucial Steps Only)**: If any config is absolutely necessary (e.g., creating `.env` from `.env.example` and setting 1-2 vital variables).
+        ```bash
+        # Example: cp .env.example .env
+        # (Edit .env to set YOUR_API_KEY=dummy_key_for_local)
+        ```
+      </item>
+      <item order="6">**The Magic Command(s)**: The single (or very few) command(s) to run the most basic, working example or start the server in its simplest form.
+        ```bash
+        # Example: npm start OR python -m my_component.server --port 8080
+        ```
+      </item>
+      <item order="7">**Verification**:
+        *   **Expected Output**: Describe what successful execution looks like in the console (e.g., "Server listening on http://localhost:8080").
+        *   **Test Command (If Applicable)**: A simple command to verify functionality (e.g., `curl http://localhost:8080/health`, or an MCP tool call example).
+      </item>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS04" name="Blueprint 🛠️: Core Functionality & Tools/APIs (H2)">
+      <description>Details the main capabilities. For servers, list tools. For libraries, list main functions/classes. Use structured formats.</description>
+      <subsection name="Overview">Briefly describe the suite of functionalities offered.</subsection>
+      <subsection name="Key Tools / API Endpoints / Functions (Structured Presentation)">
+        <notes>Use YAML, JSON, or clear Markdown tables. For each item:</notes>
+        <item_details>
+          <detail name="Name">The callable name (e.g., `brave_web_search`, `/users/{id}`, `calculate_metrics()`).</detail>
+          <detail name="Description">Concise explanation of what it does.</detail>
+          <detail name="Input Schema/Parameters Summary">Key parameters, types, optional/required, defaults, and their purpose. Link to full schema if complex.</detail>
+          <detail name="Output/Return Value Summary">Expected output structure or return type and its meaning.</detail>
+          <detail name="Example Call/Usage (Critical)">A brief, runnable example.
+            ```json
+            // MCP Example
+            // { "method": "tool_name", "params": { "key": "value" } }
+            ```
+            ```python
+            # Library Example
+            # result = my_library.do_something(param="example")
+            ```
+          </detail>
+        </item_details>
+      </subsection>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS05" name="Engine Room ⚙️: Configuration & Runtime Details (H2)">
+      <description>Essential information for configuring, running, and understanding the component's operational aspects.</description>
+      <subsection name="Comprehensive Configuration">
+        <item>How configuration is managed (e.g., `.env` files, YAML/JSON config files, command-line arguments).</item>
+        <item>Table or structured list of important configuration variables/settings: Name, Description, Default Value, Example Value(s), Impact if changed.</item>
+        <item>Link to a separate, detailed configuration guide if extensive.</item>
+      </subsection>
+      <subsection name="Key Dependencies & Their Roles">
+        <item>List 3-5 major external dependencies (libraries, frameworks, services).</item>
+        <item>For each, briefly explain *why* it was chosen and its role in the component (e.g., "FastAPI: For high-performance web framework and automatic data validation.").</item>
+      </subsection>
+      <subsection name="Execution Environment Assumptions">
+        <item>OS Compatibility: (e.g., Linux, macOS, Windows - specify if tested/primary).</item>
+        <item>Required Runtimes/SDKs (beyond quick start): Detailed versions if critical.</item>
+        <item>Network Requirements: (e.g., Required outbound access to `api.example.com:443`, opens port `8080/tcp` locally).</item>
+        <item>Resource Profile (Typical): Ballpark figures for CPU, Memory (idle/load), Disk (if significant).</item>
+      </subsection>
+      <subsection name="Security Considerations">
+        <item>How are secrets/API keys expected to be handled (e.g., "MUST be passed via environment variables").</item>
+        <item>Default port exposure and any advice on securing it.</item>
+        <item>Input validation strategies or known sensitive inputs.</item>
+        <item>Authentication/Authorization mechanisms if applicable.</item>
+      </subsection>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS06" name="Connectors 🔌: Integration & Interoperability (H2)">
+      <description>How this component interacts with the wider world.</description>
+      <subsection name="Primary Interaction Pattern"> (e.g., "Acts as an MCP server via stdio," "Is a CLI tool," "Provides a REST API," "Is a Python library imported into other applications").</subsection>
+      <subsection name="Upstream Systems / Data Sources">What does it consume data or requests from at runtime? (e.g., "Listens for messages on RabbitMQ queue `X`," "Queries PostgreSQL database `Y`").</subsection>
+      <subsection name="Downstream Systems / Consumers">Who or what typically uses this component's output or API? (e.g., "AI Agents via MCP," "A web frontend," "Data pipeline stage Z").</subsection>
+      <subsection name="API/Protocol Quick Reference (If Applicable and not fully covered in CRS04)">
+        <item>Link to detailed API documentation (e.g., Swagger/OpenAPI spec, gRPC .proto files).</item>
+        <item>Brief summary of key message formats or communication protocols if unique.</item>
+      </subsection>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS07" name="Developer's Compass 🧭: Codebase & Contribution Guide (H2)">
+      <description>Information for those looking to understand, modify, or contribute to the component.</description>
+      <subsection name="Architectural Overview & Key Design Decisions">
+        <item>Briefly explain the high-level architecture (e.g., microservice, monolithic, event-driven).</item>
+        <item>Mention 1-3 key design choices or patterns used and their rationale (e.g., "Adopted actor model for concurrency using Akka," "Chose Rust for performance-critical sections").</item>
+      </subsection>
+      <subsection name="Codebase Tour (Key Directories & Files)">
+        <item>List 3-5 most important directories or files and their purpose.
+          ```
+          src/core/           # Core server logic, message handling
+          src/tools/          # Implementations for each MCP tool
+          src/config/         # Configuration loading and validation
+          tests/              # Unit and integration tests
+          main.py             # Main application entry point
+          ```
+        </item>
+      </subsection>
+      <subsection name="Core Abstractions to Understand First">
+        <item>Identify 1-3 central classes, interfaces, or modules that are fundamental to understanding the component's operation.</item>
+      </subsection>
+      <subsection name="Setting Up Full Development Environment">
+        <item>Steps beyond the Quick Start: installing dev dependencies, linters, formatters, pre-commit hooks.
+          ```bash
+          # Example: uv sync --all-groups (Python) OR npm install (Node.js)
+          # pre-commit install (if used)
+          ```
+        </item>
+      </subsection>
+      <subsection name="Running Tests & Linters">
+        <item>Commands to execute the full test suite, check coverage, and run linters/formatters.
+          ```bash
+          # Example: pytest --cov=src tests/
+          # npm run lint && npm run test
+          # cargo test --all-features
+          ```
+        </item>
+      </subsection>
+      <subsection name="Contribution Guidelines">
+        <item>Link to a `CONTRIBUTING.md` file if it exists.</item>
+        <item>Otherwise, briefly state preferred PR process, coding style (if any), issue tracking, and areas where contributions are most welcome.</item>
+      </subsection>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS08" name="Alerts & Advisories ⚠️: Troubleshooting & Known Quirks (H2)">
+      <description>Common problems, their symptoms, and solutions or workarounds.</description>
+      <item order="1">**Problem 1:** [Clear description of a common issue, e.g., "Server fails to start with 'Address already in use' error."]</item>
+      <subitem order="1a">**Symptom:** [How it manifests, e.g., "Error message in console."]</subitem>
+      <subitem order="1b">**Solution/Workaround:** [Clear steps to resolve, e.g., "Identify and stop the process using the port, or configure the server to use a different port via `MCP_PORT` env var."]</subitem>
+      <item order="2">**Problem 2:** [...]</item>
+      <item order="3">Link to a more detailed troubleshooting guide, FAQ, or relevant GitHub Issues discussion if available.</item>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS09" name="Horizon 🗺️: Roadmap & Future Vision (H2, Optional)">
+      <description>A glimpse into the future plans for this component.</description>
+      <subsection name="Short-term Goals (Next 1-3 Months)"> (e.g., "Add `tool_x` for feature Y," "Refactor module Z for improved performance," "Achieve 90% test coverage.")</subsection>
+      <subsection name="Long-term Vision (6-12+ Months)"> (e.g., "Become the standard for X in AiChemistForge," "Integrate with system Y," "Support protocol Z.")</subsection>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS10" name="License 📄 (H2)">
+      <description>Licensing information for the component.</description>
+      <item>State the license (e.g., "MIT License," "Apache 2.0").</item>
+      <item>Link to the full `LICENSE` file in the repository.</item>
+      <item order="10">--- (Horizontal Rule) ---</item>
+    </section>
+
+    <section id="CRS11" name="Footer (Mandatory Attribution)">
+      <description>A standard footer to indicate adherence to this standard and the role of AI.</description>
+      <item>
+        _This document adheres to (or is evolving towards) the **Catalyst Documentation Standard (v0.1.0)**. AI contributions were integral to its generation and are encouraged for its ongoing refinement. Your feedback on this document and the standard itself is welcome!_
+      </item>
+    </section>
+  </documentation-structure>
+
+  <examples>
+    <good-practice lang="markdown">
+      <description>A README following the Catalyst standard would be comprehensive, covering most of the sections above with clear, actionable content and structured data where appropriate. It would enable a new user to quickly understand the project's purpose, get it running, and know where to look for more detailed information or how to contribute. AI agents could easily parse tool lists and configurations.</description>
+      <example>
+        <![CDATA[
+# MyExample MCP Server - Catalyst README
+
+**One-Liner:** An MCP server providing advanced data processing tools for AI workflows.
+**Version:** v0.5.0-beta
+**Status:** Beta
+**AI Agent Quick-Parse ID:** `MYCORP::MYEXAMPLE_MCP_SERVER::V_0_5_0_BETA`
+---
+## Spark ✨: Purpose & Value
+*   **Problem Solved:** Addresses the challenge of efficiently preprocessing and augmenting large datasets for AI model training.
+*   **Unique Value Proposition (UVP):** Offers a highly performant, extensible platform with built-in support for common data formats and transformations, accessible via a simple MCP interface.
+*   **Target Audience(s):** Data Scientists, ML Engineers, AI Agents requiring data services.
+*   **Core Use Cases (Illustrated):**
+    1.  **On-demand Data Cleaning:** Call a tool to clean a dataset specified by a URI.
+    2.  **Feature Engineering:** Use transformation tools to generate new features from existing data.
+---
+## Ignition 🔥: 5-Minute Quick Start
+**Goal:** Start the server and successfully execute the `echo` tool.
+1.  **Prerequisites (Minimal):**
+    *   Python 3.10+
+    *   `pip` for installing dependencies.
+2.  **Clone/Obtain:**
+    ```bash
+    git clone https://github.com/mycorp/myexample-mcp-server.git
+    cd myexample-mcp-server
+    ```
+3.  **Install Minimal Dependencies:**
+    ```bash
+    pip install -r requirements-minimal.txt
+    # (Assuming requirements-minimal.txt contains only essential runtime deps)
+    ```
+4.  **Minimal Configuration:** (None for basic echo tool)
+5.  **The Magic Command(s):**
+    ```bash
+    python -m src.main --transport stdio
+    ```
+6.  **Verification:**
+    *   **Expected Output (Server Console):** `MyExample MCP Server v0.5.0-beta started. Listening on stdio.`
+    *   **Test Command (MCP Client or separate terminal for direct stdio):**
+        Send JSON-RPC: `{"jsonrpc": "2.0", "method": "echo", "params": {"message": "hello"}, "id": 1}`
+        Expected Response: `{"jsonrpc": "2.0", "result": {"response": "hello"}, "id": 1}`
+---
+## Blueprint 🛠️: Core Functionality & Tools/APIs
+(Details of tools like `process_csv`, `transform_image` using YAML or table format)
+---
+## Engine Room ⚙️: Configuration & Runtime Details
+(Details on `.env` settings for `DATABASE_URL`, `CACHE_SIZE`, etc.)
+---
+... (other sections as per the Catalyst Standard) ...
+---
+_This document adheres to (or is evolving towards) the **Catalyst Documentation Standard (v0.1.0)**. AI contributions were integral to its generation and are encouraged for its ongoing refinement. Your feedback on this document and the standard itself is welcome!_
+        ]]>
+      </example>
+    </good-practice>
+    <bad-practice lang="markdown">
+      <description>A traditional README that might only include installation and basic run commands, lacking depth on purpose, configuration, architecture, or structured tool definitions. Difficult for AI to parse reliably for detailed understanding.</description>
+      <example>
+        <![CDATA[
+# My Server
+
+This server does stuff.
+
+## Installation
+`pip install .`
+
+## Running
+`python main.py`
+
+## Tools:
+- tool_one
+- tool_two: does something with files
+        ]]>
+      </example>
+    </bad-practice>
+  </examples>
+
+  <critical-instructions>
+    <instruction priority="1">When creating or updating a README or main project overview, ALWAYS strive to include content for each major section defined in the Catalyst Documentation Standard (`CRS01` through `CRS11`). The depth of each section can vary, but its presence and intent should be addressed.</instruction>
+    <instruction priority="1">The "Spark ✨: Purpose & Value" (CRS02) and "Ignition 🔥: 5-Minute Quick Start" (CRS03) sections are considered ESSENTIAL and MUST be prioritized.</instruction>
+    <instruction priority="2">For sections like "Blueprint 🛠️" (CRS04 - tools/APIs) and "Engine Room ⚙️" (CRS05 - configuration), AI agents MUST attempt to use structured data formats (e.g., YAML blocks within Markdown, well-defined tables) to present lists of items for enhanced AI parsability and human readability.</instruction>
+    <instruction priority="1">AI Agents MUST follow the "AI Augmentation Directive" when working with documents under this standard, proactively enhancing content and structure for maximum utility and clarity.</instruction>
+    <instruction priority="1">The standard footer in section `CRS11` (Attribution) MUST be included in all documents adhering to this standard.</instruction>
+    <instruction priority="3">This Catalyst Documentation Standard is a living document. AI agents and human developers are encouraged to provide feedback and suggest improvements to the standard itself to ensure its continued relevance and effectiveness.</instruction>
+  </critical-instructions>
+</cursor-rule>

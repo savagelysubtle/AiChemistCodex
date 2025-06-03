@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 # IMPORTANT:
 
-# Always read @airesearchagentcontext.mdc before writing any code.
+# Always read [AiChemistForge.md](mdc:.cursor/AiChemistForge.md).md before writing any code.
 
 # Located ${workspace}/.cursor/${workspace}.md
 

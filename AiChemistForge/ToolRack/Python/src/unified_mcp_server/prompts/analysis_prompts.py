@@ -19,6 +19,26 @@ def register_analysis_prompts(mcp: FastMCP) -> None:
     async def analyze_codebase(focus_area: str = "architecture") -> str:
         """Generate prompts for codebase analysis with specific focus areas.
 
+        📋 WHEN TO USE THIS PROMPT:
+        - Starting code review or technical assessment of a project
+        - Need systematic approach to understand unfamiliar codebase
+        - Planning refactoring or modernization efforts
+        - Preparing technical documentation or architecture reviews
+        - Onboarding new team members to existing codebase
+
+        💡 PERFECT FOR:
+        - "New team member needs to understand this legacy system"
+        - "Planning to migrate from monolith to microservices"
+        - "Need to assess technical debt before major feature development"
+        - "Security audit requires comprehensive code analysis"
+        - "Performance issues need systematic investigation"
+
+        🎯 FOCUS AREA GUIDE:
+        - architecture: System design, component relationships, design patterns, scalability
+        - performance: Algorithms, bottlenecks, optimization opportunities, resource usage
+        - security: Vulnerabilities, authentication, data protection, input validation
+        - maintainability: Code quality, testing, documentation, technical debt
+
         Args:
             focus_area: The aspect to focus on (architecture, performance, security, maintainability)
         """
@@ -183,8 +203,30 @@ Use our reasoning tools to plan the analysis:
     async def explore_cursor_projects(project_filter: str = "") -> str:
         """Generate prompts for exploring Cursor IDE project data.
 
+        🔍 WHEN TO USE THIS PROMPT:
+        - Want to understand your coding patterns and project history
+        - Looking for insights from previous AI interactions and solutions
+        - Need to find examples of how you solved similar problems before
+        - Analyzing productivity patterns and learning opportunities
+        - Research project setup and configuration across different domains
+
+        💡 PERFECT FOR:
+        - "How did I solve authentication in my previous React projects?"
+        - "What are my most productive coding patterns with AI assistance?"
+        - "Find examples of how I've structured database schemas"
+        - "What debugging approaches have worked best for me?"
+        - "Analyze my learning progression in a new technology"
+        - "Find reusable code patterns from successful projects"
+
+        🎯 PROJECT FILTER EXAMPLES:
+        - "react" → Focus on React-related projects
+        - "python" → Analyze Python development patterns
+        - "api" → Look at API development approaches
+        - "database" → Find database design and query patterns
+        - Leave empty for comprehensive analysis across all projects
+
         Args:
-            project_filter: Optional filter for specific project patterns
+            project_filter: Optional filter for specific project patterns (language, framework, domain)
         """
         logger.debug(
             f"Generating Cursor project exploration prompt with filter: {project_filter}"
@@ -246,9 +288,32 @@ Ready to start exploring? Choose a specific project focus or let me guide you th
     async def guided_problem_solving(problem: str, domain: str = "general") -> str:
         """Generate prompts for guided problem-solving workflows.
 
+        🧭 WHEN TO USE THIS PROMPT:
+        - Facing a complex problem and need structured approach to tackle it
+        - Want systematic methodology to ensure thorough problem analysis
+        - Need to coordinate multiple tools and approaches effectively
+        - Working on unfamiliar domain and want proven problem-solving framework
+        - Want to ensure comprehensive coverage without missing critical aspects
+
+        💡 PERFECT FOR:
+        - "How do I implement this complex new feature systematically?"
+        - "Need to debug this multi-layered system issue"
+        - "Planning a large refactoring project with many moving parts"
+        - "Learning new technology and need structured approach"
+        - "Coordinating team effort on complex technical challenge"
+        - "Research project with multiple unknowns and constraints"
+
+        🎯 DOMAIN GUIDE:
+        - technical: Software development, architecture, debugging, system design
+        - analytical: Data analysis, research, hypothesis testing, statistical modeling
+        - creative: Design projects, innovation challenges, content creation
+        - business: Strategy, planning, process improvement, stakeholder management
+        - research: Academic research, investigation, knowledge discovery
+        - general: Mixed or undefined domain requiring flexible approach
+
         Args:
-            problem: The problem to address
-            domain: Problem domain (technical, analytical, creative, business, research)
+            problem: The problem to address (be specific about what you want to accomplish)
+            domain: Problem domain (technical, analytical, creative, business, research, general)
         """
         logger.debug(f"Generating guided problem solving prompt for domain: {domain}")
 
@@ -380,8 +445,36 @@ Ready to begin the systematic problem-solving process? I recommend starting with
     ) -> str:
         """Generate prompts for optimal MCP tool orchestration and workflow planning.
 
+        🚀 WHEN TO USE THIS PROMPT:
+        - Need to plan efficient workflow using multiple MCP tools together
+        - Want to optimize tool usage sequence for complex analysis tasks
+        - Planning comprehensive investigation that requires coordinated tool usage
+        - Need guidance on which tools work best together for specific outcomes
+        - Want to maximize efficiency and avoid redundant or ineffective tool usage
+
+        💡 PERFECT FOR:
+        - "Plan complete codebase analysis using all available tools"
+        - "Design workflow for systematic debugging investigation"
+        - "Coordinate tools for comprehensive project assessment"
+        - "Optimize research workflow across filesystem and cursor data"
+        - "Plan team onboarding process using structured tool sequences"
+        - "Design reusable workflow templates for recurring analysis tasks"
+
+        🎯 TASK EXAMPLES:
+        - "Comprehensive security audit" → Plan security-focused tool sequence
+        - "New project setup analysis" → Coordinate filesystem and planning tools
+        - "Performance investigation" → Orchestrate analysis and dependency tools
+        - "Legacy system modernization planning" → Systematic analysis and decomposition
+        - "Team knowledge transfer" → Structure exploration and documentation tools
+
+        ⚡ ORCHESTRATION BENEFITS:
+        - Parallel processing: Use compatible tools simultaneously
+        - Sequential optimization: Ensure logical flow and dependency handling
+        - Feedback loops: Use tool outputs to inform subsequent tool choices
+        - Resource efficiency: Minimize redundant analysis and maximize insights
+
         Args:
-            task: The task or workflow to optimize
+            task: The task or workflow to optimize (be specific about your goal and scope)
             available_tools: Comma-separated list of tools, or 'auto-detect' to use all available
         """
         logger.debug(f"Generating tool orchestration prompt for task: {task}")

@@ -1,7 +1,7 @@
 ---
-description: ALWAYS follow this protocol WHEN assisting with code tasks
-globs: 
-alwaysApply: true
+description: ALWAYS follow this protocol WHEN assisting with ANY task where the task is more then trivial
+globs:
+alwaysApply: false
 ---
 <aiDecision>
   description: ALWAYS follow this protocol WHEN assisting with code tasks

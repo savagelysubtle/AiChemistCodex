@@ -1,220 +1,229 @@
-# AiChemistForge - Unified MCP Server
+# AiChemistForge - Python Unified MCP Server
 
-A comprehensive Model Context Protocol (MCP) server that provides organized tools for AI development workflows. Built with Python 3.13 and designed for extensibility and maintainability.
+A comprehensive Model Context Protocol (MCP) server built with Python 3.13+, providing a collection of organized tools designed to assist AI development workflows. This server is part of the larger AiChemistForge project but can be run and developed as a standalone service.
 
 ## Features
 
-- **Modular Architecture**: Clean separation between server infrastructure and tools
-- **Auto-Discovery**: Automatic tool registration and discovery
-- **Type Safety**: Full type hints and Pydantic validation
-- **Robust Error Handling**: Comprehensive error handling with detailed logging
-- **Extensible**: Easy to add new tools and categories
-- **Production Ready**: Proper configuration management and logging
-- **Cross-Project Compatible**: Easy setup for multiple projects
+- **Modular Architecture**: Clean separation between the core server infrastructure and individual tools.
+- **Auto-Discovery**: Tools are automatically discovered and registered by the server on startup.
+- **Type Safety**: Leverages Python's type hinting for improved code quality and maintainability. Pydantic is used for data validation where applicable.
+- **Robust Error Handling**: Designed with comprehensive error handling and detailed logging capabilities.
+- **Extensible**: Easily add new tools and tool categories to expand functionality.
+- **Configuration Management**: Supports environment variables for flexible configuration (see `.env.example`).
+- **Stdio Transport**: Primarily uses stdio for communication, making it suitable for local development and integration with tools like Cursor.
 
 ## Current Tools
 
+This server can host a variety of tools. As of the last update, it includes:
+
 ### Database Tools
-- **cursor_db**: Query and manage Cursor IDE state databases
-  - List projects and workspaces
-  - Query chat data and composer information
-  - Access project-specific databases
+- **`query_cursor_database`**: Allows querying and managing Cursor IDE's internal state databases.
+  - List projects and workspaces.
+  - Query chat history and composer information.
+  - Access project-specific databases.
 
 ### Filesystem Tools
-- **file_tree**: Generate directory tree structures
-- **codebase_ingest**: Process entire codebases for LLM context
+- **`file_tree`**: Generates a tree-like representation of a directory's structure.
+- **`codebase_ingest`**: Processes an entire codebase to prepare it for Large Language Model (LLM) context.
+
+*(This list can be expanded as more tools are added. Refer to the `src/unified_mcp_server/tools/` directory for current implementations.)*
 
 ## Installation
 
 ### Prerequisites
-- Python 3.13+
-- UV package manager
+- Python 3.13 or newer
+- [UV Package Manager](https://github.com/astral-sh/uv)
 
-### Setup
-```bash
-# Clone the repository
-git clone <repository-url>
-cd ToolRack/Python
+### Setup Instructions
 
-# Install dependencies
-uv sync --all-groups
+1.  **Clone the Server Directory (if not already part of a larger clone):**
+    If you are treating this server as a standalone project, you would clone its specific directory or the parent AiChemistForge repository and navigate here.
+    ```bash
+    # Example if AiChemistForge is cloned:
+    # git clone https://github.com/your-username/AiChemistForge.git
+    cd AiChemistForge/ToolRack/Python
+    ```
 
-# Test the installation
-python test_mcp_server.py
-```
+2.  **Create and Activate a Virtual Environment (Recommended):**
+    While UV can manage global tools, it's good practice for project isolation.
+    ```bash
+    python -m venv .venv
+    # On Windows
+    .venv\\Scripts\\activate
+    # On macOS/Linux
+    source .venv/bin/activate
+    ```
+
+3.  **Install Dependencies using UV:**
+    This command installs all dependencies defined in `pyproject.toml`, including those for different groups (e.g., `dev` dependencies).
+    ```bash
+    uv sync --all-groups
+    ```
+    This step is crucial and ensures that all necessary packages, including the `unified_mcp_server` itself and its dependencies, are installed correctly. The `start_mcp_server.bat` script relies on `uv` being available within the environment (often via this installation step creating a shim or by having `uv` installed globally).
+
+4.  **Set up Environment Variables (Optional but Recommended):**
+    Copy the `.env.example` file to `.env` and customize the settings as needed.
+    ```bash
+    copy .env.example .env  # Windows
+    # cp .env.example .env    # macOS/Linux
+    ```
+    Review and edit the `.env` file to configure server name, log levels, paths, etc.
 
 ## Usage
 
 ### Running the Server
-```bash
-# Run with default configuration
-uv run python -m unified_mcp_server.main
 
-# Or use the batch script (Windows)
-start_mcp_server.bat
-```
+There are a couple of ways to run the MCP server:
 
-## Cross-Project Usage
+1.  **Using the Batch Script (Windows):**
+    The `start_mcp_server.bat` script handles setting up the environment and running the server.
+    ```bash
+    start_mcp_server.bat
+    ```
+    You can also run it in debug mode for more verbose logging:
+    ```bash
+    start_mcp_server.bat --debug
+    ```
+    This script ensures `PYTHONPATH` is set correctly and uses `uv run` to execute the server module.
 
-### For Other Projects to Connect to This Server
+2.  **Running Manually with UV (Cross-Platform):**
+    If you have activated a virtual environment where `uv` and project dependencies are installed:
+    ```bash
+    uv run python -m unified_mcp_server.main --stdio
+    ```
+    To enable debug logging similar to the batch script's debug mode, you might need to set the `MCP_LOG_LEVEL` environment variable to `DEBUG` (e.g., in your `.env` file or directly in the command line if supported by your shell).
 
-#### Method 1: Global Configuration (Recommended)
-1. Add to **Cursor Settings > Features > Model Context Protocol**:
-```json
-{
-  "mcpServers": {
-    "aichemistforge-server": {
-      "command": "D:\\path\\to\\AiChemistForge\\ToolRack\\Python\\start_mcp_server.bat",
-      "cwd": "D:\\path\\to\\AiChemistForge\\ToolRack\\Python"
+### Connecting from an MCP Client (e.g., Cursor)
+
+To make this server accessible to an MCP client like Cursor:
+
+1.  **Cursor Settings:**
+    Open Cursor settings and navigate to `Features > Model Context Protocol`.
+
+2.  **Add Server Configuration:**
+    Add a new server configuration pointing to the `start_mcp_server.bat` script (or the manual command if you prefer, though the batch script is often more robust for pathing).
+    *   **Command:** Absolute path to `start_mcp_server.bat` (e.g., `D:\\Coding\\AiChemistCodex\\AiChemistForge\\ToolRack\\Python\\start_mcp_server.bat`).
+    *   **CWD (Current Working Directory):** Absolute path to the `ToolRack/Python/` directory (e.g., `D:\\Coding\\AiChemistCodex\\AiChemistForge\\ToolRack\\Python`).
+
+    Example JSON for Cursor settings:
+    ```json
+    {
+      "mcpServers": {
+        "aichemistforge-python-server": { // Choose a unique name
+          "command": "D:\\path\\to\\AiChemistForge\\ToolRack\\Python\\start_mcp_server.bat",
+          "cwd": "D:\\path\\to\\AiChemistForge\\ToolRack\\Python"
+        }
+      }
     }
-  }
-}
-```
+    ```
+    **Note:**
+    *   Replace `D:\\path\\to\\` with the actual absolute path to your `AiChemistForge` directory.
+    *   Use double backslashes (`\\\\`) for paths in JSON on Windows.
+    *   Ensure there are no spaces in the path if possible, as it can sometimes cause issues with command execution in some environments.
 
-#### Method 2: Project-Level Configuration
-1. **Enable project-level MCP** in Cursor settings
-2. Copy `mcp_config_template.json` to your project's `.cursor/mcp.json`
-3. Update the `ABSOLUTE_PATH_TO_AICHEMISTFORGE` placeholders
-4. Restart Cursor
+3.  **Project-Level MCP (If applicable):**
+    If you prefer project-specific MCP configurations in Cursor, enable "Allow Project Level MCP Servers" in Cursor's settings. Then, you can create a `.cursor/mcp.json` file in your target project with a similar configuration.
 
-#### Method 3: Use the Template
-```bash
-# Copy template to your project
-cp ToolRack/Python/mcp_config_template.json /path/to/your/project/.cursor/mcp.json
-
-# Edit the file and replace ABSOLUTE_PATH_TO_AICHEMISTFORGE with:
-# D:\\Coding\\AiChemistCodex\\AiChemistForge
-```
-
-### Important Notes for Cross-Project Setup
-- **Absolute paths required** - Cursor doesn't support relative paths well
-- **Enable project MCP** - Must be enabled in Cursor settings
-- **No spaces in paths** - Avoid paths with spaces for best compatibility
-- **Double backslashes** - Use `\\\\` in JSON configurations
-- **Tool limit** - Cursor supports max 40 tools simultaneously
-
-### Available Tools After Connection
-- `query_cursor_database` - Access Cursor project databases
-- `file_tree` - Generate directory structures
-- `codebase_ingest` - Process codebases for AI context
-- `manage_plugins` - Plugin management (when available)
+### Available Tools After Connection (Examples)
+Once connected, tools provided by this server will be available in the client:
+- `query_cursor_database`
+- `file_tree`
+- `codebase_ingest`
+*(This list will reflect the tools currently enabled and discovered by the server.)*
 
 ### Configuration
-The server can be configured via environment variables:
-
-```bash
-# Server settings
-export MCP_SERVER_NAME="my-custom-server"
-export MCP_LOG_LEVEL="DEBUG"
-export MCP_TRANSPORT_TYPE="stdio"
-
-# Database settings
-export CURSOR_PATH="/path/to/cursor"
-export PROJECT_DIRS="/path/to/project1,/path/to/project2"
-
-# Security settings
-export MAX_FILE_SIZE="20000000"  # 20MB
-export MAX_QUERY_RESULTS="2000"
-```
-
-### Troubleshooting Cross-Project Issues
-See `.cursor/mcp_troubleshooting.md` for comprehensive Windows 11 troubleshooting guide.
-
-Common issues:
-- **"Client Closed" errors**: Use `cmd /c` wrapper or batch script
-- **Path not found**: Ensure absolute paths and no spaces
-- **Tools not visible**: Enable project-level MCP in settings
-- **Server timeout**: Check Windows command execution format
+The server behavior can be customized through environment variables. Key variables are listed in `.env.example`. These include:
+- `MCP_SERVER_NAME`: Name of the MCP server.
+- `MCP_LOG_LEVEL`: Logging verbosity (e.g., `DEBUG`, `INFO`).
+- `MCP_TRANSPORT_TYPE`: Communication transport (typically `stdio`).
+- `CURSOR_PATH`: Path to the Cursor application data directory (often auto-detected).
+- `PROJECT_DIRS`: Comma-separated list of additional project directories for tools like `query_cursor_database`.
+- `MAX_FILE_SIZE`: Maximum file size for file operations.
+- `MAX_QUERY_RESULTS`: Maximum results for database queries.
 
 ## Development
 
 ### Project Structure
+The server code is primarily located within the `src/unified_mcp_server` directory:
 ```
-Python/src/unified_mcp_server/
-├── server/              # Core server infrastructure
-│   ├── config.py       # Configuration management
-│   ├── logging.py      # Logging setup
-│   └── mcp_server.py   # Main MCP server implementation
-├── tools/              # Tool implementations
-│   ├── base.py         # Base tool interface
-│   ├── registry.py     # Tool discovery and registration
-│   ├── database/       # Database tools
-│   ├── filesystem/     # File system tools (planned)
-│   ├── web/           # Web tools (planned)
-│   └── system/        # System tools (planned)
-└── main.py            # Entry point
+src/unified_mcp_server/
+├── server/              # Core server infrastructure (config, logging, main server logic)
+│   ├── config.py
+│   ├── logging.py
+│   └── mcp_server.py
+├── tools/               # Tool implementations, organized by category
+│   ├── base.py          # BaseTool class for all tools
+│   ├── registry.py      # Tool discovery and registration mechanism
+│   ├── database/        # Example: Database-related tools
+│   └── filesystem/      # Example: Filesystem-related tools
+└── main.py              # Main entry point for running the server
 ```
 
 ### Adding New Tools
 
-1. Create a new tool class inheriting from `BaseTool`:
+1.  **Create a Tool Class:**
+    Define a new Python class that inherits from `unified_mcp_server.tools.base.BaseTool`.
+    ```python
+    from ..base import BaseTool
+    from pydantic import BaseModel, Field # For input schema validation
 
-```python
-from ..base import BaseTool
+    class MyToolInput(BaseModel):
+        param1: str = Field(description="Description for parameter 1")
+        param2: int = Field(default=0, description="Optional parameter 2")
 
-class MyTool(BaseTool):
-    def __init__(self):
-        super().__init__(
-            name="my_tool",
-            description="Description of what my tool does"
-        )
+    class MyTool(BaseTool):
+        def __init__(self):
+            super().__init__(
+                name="my_tool_name", # Unique name for the tool
+                description="A clear description of what my tool does.",
+                input_schema=MyToolInput.model_json_schema() # Generate schema from Pydantic model
+            )
 
-    async def execute(self, **kwargs):
-        # Tool implementation
-        return {"result": "success"}
+        async def execute(self, validated_args: MyToolInput) -> dict:
+            # Your tool's logic here, using validated_args
+            # Example: result = await some_async_operation(validated_args.param1)
+            return {"message": f"Tool executed with {validated_args.param1} and {validated_args.param2}"}
 
-    def get_schema(self):
-        return {
-            "type": "object",
-            "properties": {
-                "param1": {"type": "string", "description": "Parameter description"}
-            },
-            "required": ["param1"]
-        }
-```
+    ```
 
-2. Place the tool in the appropriate category directory
-3. The tool will be automatically discovered and registered
+2.  **Place the Tool File:**
+    Save your new tool file (e.g., `my_new_tool.py`) into an appropriate subdirectory within `src/unified_mcp_server/tools/` (e.g., `src/unified_mcp_server/tools/custom/`). Create a new subdirectory if a suitable category doesn't exist. Ensure the subdirectory has an `__init__.py` file so it's recognized as a package.
+
+3.  **Automatic Discovery:**
+    The `ToolRegistry` is designed to automatically discover and load tools from these directories. Ensure your tool class is imported in the `__init__.py` of its respective category folder or that the tool module itself is discoverable.
 
 ### Testing
-
+Basic tests can be run to ensure server components are functioning.
 ```bash
-# Run basic tests
-python test_server.py
-
-# Run with development logging
-python -c "import os; os.environ['MCP_LOG_LEVEL']='DEBUG'; exec(open('test_server.py').read())"
+# Example: If you have a test_server.py script
+uv run python test_server.py
 ```
+For more detailed testing or specific tool tests, you would typically use a test runner like `pytest`. Ensure development dependencies are installed (`uv sync --all-groups` should cover this if `pytest` is in `dev-dependencies`).
 
 ## Architecture
 
 ### Core Components
-
-- **UnifiedMCPServer**: Main server class handling MCP protocol
-- **ToolRegistry**: Manages tool discovery and registration
-- **BaseTool**: Abstract base class for all tools
-- **ServerConfig**: Configuration management with environment variable support
+- **`UnifiedMCPServer` (in `mcp_server.py`):** The main class that handles the MCP protocol, connection management, and message dispatching.
+- **`ToolRegistry` (in `registry.py`):** Responsible for discovering, loading, and managing all available tools.
+- **`BaseTool` (in `tools/base.py`):** An abstract base class that all tools must inherit from, defining a common interface for tool execution and schema definition.
+- **`ServerConfig` (in `config.py`):** Manages server configuration, primarily loading settings from environment variables (via `.env` file or system environment).
 
 ### Design Principles
-
-- **Separation of Concerns**: Clear boundaries between server infrastructure and tools
-- **Type Safety**: Comprehensive type hints throughout
-- **Error Handling**: Graceful error handling with detailed logging
-- **Extensibility**: Easy to add new tools and modify existing ones
-- **Configuration**: Environment-based configuration for different deployment scenarios
+- **Separation of Concerns**: The server's operational logic is distinct from the specific functionalities of the tools it hosts.
+- **Type Safety**: Extensive use of Python type hints helps in maintaining code quality and catching errors early. Pydantic models are used for schema validation.
+- **Extensibility**: The system is designed to be easily extendable with new tools without requiring modifications to the core server logic.
+- **Configuration over Code**: Server behavior and tool parameters are managed through configuration where possible, promoting flexibility.
 
 ## Contributing
-
-1. Follow the existing code structure and patterns
-2. Add comprehensive type hints
-3. Include proper error handling
-4. Add tests for new functionality
-5. Update documentation
+If you wish to contribute to this Python MCP server:
+1. Adhere to the existing code structure and design patterns.
+2. Ensure comprehensive type hints for all new code.
+3. Implement proper error handling and logging for new functionalities.
+4. Add tests for any new tools or significant changes to the core.
+5. Update documentation (like this README) if your changes affect installation, usage, or add new tools/features.
 
 ## License
-
-MIT License - see LICENSE file for details.
+This project is typically licensed under an open-source license (e.g., MIT). Refer to the `LICENSE` file in the root of the AiChemistForge repository for specific details.
 
 ## Support
-
-For issues and questions, please use the project's issue tracker.
+For issues, questions, or contributions, please refer to the issue tracker or contribution guidelines of the parent AiChemistForge project.

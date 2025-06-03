@@ -25,11 +25,29 @@ def register_reasoning_tools(mcp: FastMCP) -> None:
     ) -> Dict[str, Any]:
         """Break down problem into sequential thinking steps.
 
-        Following MCP transport best practices for error handling and logging.
+        🧠 WHEN TO USE THIS TOOL:
+        - Starting any complex task or project (coding, analysis, planning)
+        - When you feel overwhelmed by a multi-faceted problem
+        - Need to organize thoughts before diving into implementation
+        - Want to ensure you don't miss critical steps or considerations
+        - Working on unfamiliar domains where systematic thinking helps
+
+        💡 PERFECT FOR:
+        - "I need to refactor this large codebase" → Plan systematic approach
+        - "How do I implement this complex feature?" → Break down requirements
+        - "I'm debugging a weird issue" → Systematic investigation steps
+        - "Planning a new project architecture" → Structured design thinking
+        - "Learning a new technology stack" → Step-by-step learning plan
+
+        🎯 APPROACH GUIDE:
+        - systematic: Best for technical problems, debugging, implementation planning
+        - creative: Best for innovation, design challenges, finding novel solutions
+        - analytical: Best for data problems, research, hypothesis testing
+        - practical: Best for quick solutions, resource-constrained problems, MVP planning
 
         Args:
-            problem: The problem to analyze and solve
-            context: Additional context or constraints
+            problem: The problem to analyze and solve (be specific about what you want to accomplish)
+            context: Additional context or constraints (timeline, resources, requirements, etc.)
             approach: Thinking approach (systematic, creative, analytical, practical)
         """
         logger.debug(f"Starting sequential thinking for problem: {problem[:100]}...")
@@ -110,10 +128,33 @@ def register_reasoning_tools(mcp: FastMCP) -> None:
     ) -> Dict[str, Any]:
         """Decompose a complex problem into smaller, manageable parts.
 
-        Following MCP transport best practices for error handling and logging.
+        🧩 WHEN TO USE THIS TOOL:
+        - Facing a problem that feels too big to tackle all at once
+        - Need to organize work into parallel streams or phases
+        - Working with teams and need to assign different aspects to different people
+        - Want to reduce risk by breaking complex work into smaller, testable pieces
+        - Feeling stuck because the problem has too many interconnected parts
+
+        💡 PERFECT FOR:
+        - "Build a complete web application" → Break into frontend, backend, database, deployment
+        - "Migrate legacy system to modern architecture" → Identify components and migration order
+        - "Implement complex business logic" → Separate validation, processing, storage concerns
+        - "Research and implement new technology" → Break into learning, prototyping, integration phases
+        - "Debug a system-wide performance issue" → Isolate database, network, application, caching layers
+
+        🎯 TARGET SIZE GUIDE:
+        - small: Maximum granularity - creates many focused sub-problems (best for detailed planning)
+        - medium: Balanced approach - manageable chunks without overwhelming detail
+        - large: High-level breakdown - fewer, broader categories (best for initial planning)
+
+        🏗️ DOMAIN GUIDE:
+        - technical: Architecture, data, processing, interfaces, security, testing, deployment
+        - analytical: Data collection, cleaning, analysis, modeling, validation, reporting
+        - creative: Research, ideation, design, prototyping, feedback, refinement, production
+        - general: Understanding, planning, resources, implementation, testing, integration, review
 
         Args:
-            problem: The complex problem to decompose
+            problem: The complex problem to decompose (be specific about scope and constraints)
             target_size: Target size for sub-problems (small, medium, large)
             domain: Problem domain (technical, analytical, creative, general)
         """
@@ -215,10 +256,34 @@ def register_reasoning_tools(mcp: FastMCP) -> None:
     ) -> Dict[str, Any]:
         """Analyze dependencies and relationships between components.
 
-        Following MCP transport best practices for error handling and logging.
+        🔗 WHEN TO USE THIS TOOL:
+        - Planning work order for complex projects with interdependent parts
+        - Identifying bottlenecks and critical path items in your workflow
+        - Understanding which components can be worked on in parallel
+        - Preparing for refactoring where you need to understand component coupling
+        - Risk planning - identifying which failures would cascade to other components
+
+        💡 PERFECT FOR:
+        - "Microservice migration planning" → Map service dependencies and migration order
+        - "Database schema refactoring" → Identify table relationships and update sequence
+        - "Team project coordination" → Understand which tasks block others
+        - "Code architecture review" → Analyze module coupling and identify tight dependencies
+        - "Infrastructure deployment" → Plan deployment order based on service dependencies
+        - "Feature development prioritization" → Understand feature interdependencies
+
+        🎯 COMPONENT EXAMPLES:
+        - Technical: ["UserService", "PaymentService", "NotificationService", "Database"]
+        - Project: ["Requirements", "Design", "Frontend", "Backend", "Testing", "Deployment"]
+        - Business: ["Market Research", "Product Design", "Development", "Marketing", "Sales"]
+
+        ⚡ RELATIONSHIP TYPES:
+        - depends_on: Component A needs Component B to function
+        - blocks: Component A prevents Component B from proceeding
+        - enables: Component A makes Component B possible/easier
+        - integrates_with: Components work together but neither strictly depends on the other
 
         Args:
-            components: List of component names to analyze
+            components: List of component names to analyze (be specific - use actual module/service/task names)
             relationships: Optional list of relationships like [{"from": "A", "to": "B", "type": "depends_on"}]
         """
         logger.debug(
@@ -335,10 +400,35 @@ def register_reasoning_tools(mcp: FastMCP) -> None:
     ) -> Dict[str, Any]:
         """Use sequential thinking to solve problem with available tools.
 
+        🛠️ WHEN TO USE THIS TOOL:
+        - Need to plan which MCP tools to use and in what order for a specific task
+        - Want to optimize your workflow before starting complex analysis
+        - Working with multiple data sources and need to coordinate tool usage
+        - Planning a comprehensive investigation or analysis project
+        - Want to ensure you're using the most efficient approach with available tools
+
+        💡 PERFECT FOR:
+        - "Analyze this codebase thoroughly" → Plan file_tree → codebase_ingest → analyze_dependencies sequence
+        - "Understand my Cursor project patterns" → Plan query_cursor_database → sequential_think → reflect workflow
+        - "Debug complex system issue" → Plan systematic tool usage for investigation
+        - "Research project setup and analysis" → Coordinate filesystem and reasoning tools
+        - "Plan comprehensive code review" → Optimize tool sequence for maximum insight
+
+        🎯 TOOL CATEGORIES AVAILABLE:
+        - Reasoning: sequential_think, decompose_problem, analyze_dependencies, reflect_on_solution
+        - Filesystem: file_tree, codebase_ingest, filesystem resources
+        - Database: query_cursor_database, cursor resources
+        - System: manage_plugins
+
+        ⚙️ CONSTRAINT EXAMPLES:
+        - {"time_limit": "30 minutes", "focus": "security analysis"}
+        - {"max_tools": 3, "priority": "quick overview"}
+        - {"resource_limit": "low", "depth": "surface level"}
+
         Args:
-            problem: Problem to solve
-            available_tools: List of available tool names
-            constraints: Dictionary of constraints (time, resources, etc.)
+            problem: Problem to solve (be specific about your goal and what you want to accomplish)
+            available_tools: List of available tool names (auto-detects if not provided)
+            constraints: Dictionary of constraints (time, resources, focus areas, etc.)
         """
         try:
             if available_tools is None:
@@ -460,9 +550,37 @@ def register_reasoning_tools(mcp: FastMCP) -> None:
     ) -> Dict[str, Any]:
         """Evaluate and reflect on a proposed solution.
 
+        🎯 WHEN TO USE THIS TOOL:
+        - Before implementing a solution to validate it's well-thought-out
+        - After completing analysis to ensure you haven't missed important aspects
+        - When you want a systematic evaluation of pros/cons and potential issues
+        - Need to present findings to others and want comprehensive assessment
+        - Want to identify improvement opportunities before finalizing approach
+
+        💡 PERFECT FOR:
+        - "Code architecture proposal" → Validate design decisions and identify risks
+        - "Analysis findings" → Ensure conclusions are well-supported and complete
+        - "Project plan evaluation" → Check for gaps, risks, and improvement opportunities
+        - "Tool workflow results" → Assess if the chosen approach achieved desired outcomes
+        - "Research conclusions" → Validate methodology and findings before presenting
+        - "Debugging solution" → Verify the fix addresses root cause and won't create new issues
+
+        🔍 WHAT IT EVALUATES:
+        - Strengths: What works well about this solution?
+        - Weaknesses: What are the limitations or potential problems?
+        - Opportunities: How could this be improved or extended?
+        - Threats: What risks or obstacles might arise?
+        - Completeness: Does it fully address the original problem?
+        - Feasibility: Is it realistic with available resources?
+
+        📊 SUCCESS CRITERIA EXAMPLES:
+        - ["Reduces complexity", "Improves performance", "Maintains backward compatibility"]
+        - ["Provides actionable insights", "Uses reliable data", "Clear recommendations"]
+        - ["Solves root cause", "Doesn't break existing functionality", "Is maintainable"]
+
         Args:
-            solution: The solution to evaluate (can be tool results, plan, etc.)
-            original_problem: The original problem statement
+            solution: The solution to evaluate (tool results, analysis, plan, etc.)
+            original_problem: The original problem statement for comparison
             success_criteria: Optional list of success criteria to evaluate against
         """
         try:

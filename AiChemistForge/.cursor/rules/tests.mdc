@@ -1,5 +1,5 @@
 ---
-description: CRITICAL ALWAYS put rules in the proper test suite folder
+description:
 globs:
 alwaysApply: false
 ---

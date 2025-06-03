@@ -34,7 +34,7 @@ def register_cursor_database_tool(mcp: FastMCP) -> None:
     ) -> Dict[str, Any]:
         """Query Cursor IDE databases and manage database operations.
 
-        Following MCP transport best practices for error handling and logging.
+        Use Tool to query Cursor IDE databases and manage database operations.
 
         Args:
             operation: Operation to perform (list_projects, query_table, refresh_databases, get_chat_data, get_composer_ids, get_composer_data)
