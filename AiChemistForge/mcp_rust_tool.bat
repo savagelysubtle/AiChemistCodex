@@ -1,6 +1,8 @@
 @echo off
 setlocal
 
+set "RUST_TOOLCHAIN_PATH=D:\ProgramData\CodingLanguages\Rust\.cargo\bin"
+set "PATH=%RUST_TOOLCHAIN_PATH%;%PATH%"
 set "RUST_LOG=debug"
 
 npx @modelcontextprotocol/inspector ^
